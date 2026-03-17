@@ -1,0 +1,30 @@
+/* Utvider innholdskolonnen for bedre lesbarhet av teknisk dokumentasjon */
+.md-grid {
+    max-width: 1600px;
+}
+
+/* Reduserer vertikal avstand mellom menyvalgene */
+.md-nav--primary .md-nav__list {
+    gap: 0.1rem;
+}
+.md-nav--primary .md-nav__link {
+    padding-top: 0.275rem;
+    padding-bottom: 0.275rem;
+}
+
+/* Nivå 1 – seksjonsoverskrifter */
+.md-nav--primary > .md-nav__list > .md-nav__item--section > .md-nav__link {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--md-default-fg-color--lightest);
+}
+
+/* Nivå 2 – undersider */
+.md-nav--primary > .md-nav__list > .md-nav__item--section > .md-nav > .md-nav__list > .md-nav__item > .md-nav__link {
+    padding-left: 1.2rem;
+}
+
+/* Nivå 3 – endepunkter under nestede seksjoner */
+.md-nav--primary > .md-nav__list > .md-nav__item--section > .md-nav > .md-nav__list > .md-nav__item--nested > .md-nav > .md-nav__list > .md-nav__item > .md-nav__link {
+    padding-left: 1.5rem;
+}

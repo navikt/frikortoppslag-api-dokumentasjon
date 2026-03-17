@@ -1,0 +1,40 @@
+[project]
+site_name = "Frikort-APIer"
+site_description = "API-dokumentasjon for Frikortløsningen"
+
+extra_css = ["stylesheets/extra.css"]
+
+nav = [
+    { "Oversikt" = "index.md" },
+    { "Generelt" = [
+        { "Begrepsliste" = "generelt/begrepsliste.md" },
+        { "JSON-konvensjoner" = "generelt/json_konvensjoner.md" },
+        { "Endringslogg" = "generelt/endringslogg.md" },
+    ] },
+
+    { "Frikort oppslag" = [
+        { "Oversikt" = "frikort_oppslag/frikort_oppslag.md" },
+        { "Endringslogg" = "frikort_oppslag/endringslogg.md" },
+    ] },
+]
+
+[project.theme]
+language = "nb"
+
+features = [
+    "content.code.copy",
+    "search.highlight",
+    "navigation.sections",
+    "navigation.top"
+]
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+toggle.icon = "lucide/sun"
+toggle.name = "Bytt til mørk modus"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+toggle.icon = "lucide/moon"
+toggle.name = "Bytt til lys modus"
