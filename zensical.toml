@@ -6,16 +6,17 @@ extra_css = ["stylesheets/extra.css"]
 
 nav = [
     { "Oversikt" = "index.md" },
+    { "Endepunkter" = [
+        { "Hent frikortstatus" = "endepunkter/hent_frikortstatus.md" },
+        { "JWK" = "endepunkter/jwk.md" },
+    ] },
+    { "JWK ende-til-ende-kryptering" = "jwk_ende_til_ende_kryptering.md" },
     { "Generelt" = [
         { "Begrepsliste" = "generelt/begrepsliste.md" },
         { "JSON-konvensjoner" = "generelt/json_konvensjoner.md" },
         { "Endringslogg" = "generelt/endringslogg.md" },
     ] },
-
-    { "Frikort oppslag" = [
-        { "Oversikt" = "frikort_oppslag/frikort_oppslag.md" },
-        { "Endringslogg" = "frikort_oppslag/endringslogg.md" },
-    ] },
+    { "Endringslogg" = "endringslogg.md" }
 ]
 
 [project.theme]
