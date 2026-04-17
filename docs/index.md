@@ -69,3 +69,8 @@ En fullstendig OpenAPI 3.1-spesifikasjon for API-et er tilgjengelig:
 
 Det føres en endringslogg for dokumentasjonen:
 [Endringslogg](generelt/endringslogg.md)
+
+
+## Kontakt
+Ved spørsmål, ta kontakt på e-post:
+**frikort.teknisk@nav.no**
