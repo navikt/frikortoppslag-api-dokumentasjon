@@ -9,10 +9,11 @@ Klienten krypterer JSON-payloaden med vår offentlige nøkkel, hentet fra [JWKS-
 
 ## Algoritmer
 
-| Parameter | Verdi           | Beskrivelse                                 |
-|-----------|-----------------|---------------------------------------------|
-| `alg`     | `RSA-OAEP-256`  | Asymmetrisk algoritme for kryptering av CEK |
-| `enc`     | `A256GCM`       | Symmetrisk algoritme for kryptering av innhold |
+| Parameter | Verdi      | Beskrivelse                                              |
+|-----------|------------|----------------------------------------------------------|
+| `alg`     | `ECDH-ES`  | Elliptic Curve Diffie-Hellman Ephemeral Static — nøkkelavtale |
+| `enc`     | `A256GCM`  | Symmetrisk algoritme for kryptering av innhold           |
+| `crv`     | `P-256`    | Elliptisk kurve brukt for nøklene                        |
 
 ---
 
@@ -41,7 +42,7 @@ Krypter JSON-payloaden til en **JWE Compact Serialization**-streng med følgende
 
 ```json
 {
-  "alg": "RSA-OAEP-256",
+  "alg": "ECDH-ES",
   "enc": "A256GCM",
   "kid": "<kid fra JWK>"
 }
@@ -64,7 +65,7 @@ Authorization: DPoP eyJ...
 DPoP: eyJ...
 Content-Type: application/jose
 
-eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwia2lkIjoiZnJpa29ydGJpZnJvc3QtZW5jLTIwMjYwMzEyLTEifQ.OKOawDo13gRp2ojaHV7LFpZcgV7T6DVZKTyKOMTYUmKoTCVJRgckCL9kiMT03JGe...
+eyJhbGciOiJFQ0RILUVTIiwiZW5jIjoiQTI1NkdDTSIsImtpZCI6ImZyaWtvcnRiaWZyb3N0LWVuYy0yMDI2MDMxMi0xIn0...
 ```
 
 Responsen returneres som **ukryptert JSON** (`application/json`).
@@ -80,7 +81,7 @@ Responsen returneres som **ukryptert JSON** (`application/json`).
 | Del | Beskrivelse |
 |-----|-------------|
 | **Protected Header** | Metadata om krypteringen (`alg`, `enc`, `kid`). Base64url-kodet. |
-| **Encrypted Key** | Tilfeldig generert symmetrisk nøkkel (CEK), kryptert med mottakerens offentlige nøkkel. |
+| **Encrypted Key** | Ved ECDH-ES er denne tom (nøkkelen utledes direkte fra nøkkelavtalen). |
 | **Initialization Vector** | Tilfeldig verdi for unik kryptering per melding. Må være unik for hver request. |
 | **Ciphertext** | Den krypterte JSON-payloaden. |
 | **Authentication Tag** | Integritetsbeskyttelse (AES-GCM) som sikrer at innholdet ikke er endret under transport. |
@@ -91,18 +92,18 @@ Responsen returneres som **ukryptert JSON** (`application/json`).
 
 ```java
 import com.nimbusds.jose.*;
-import com.nimbusds.jose.crypto.RSAEncrypter;
+import com.nimbusds.jose.crypto.ECDHEncrypter;
 import com.nimbusds.jose.jwk.*;
 
 // 1. Hent JWKS fra endepunktet
 JWKSet jwkSet = JWKSet.load(new URL("https://frikortbifrost.nav.no/api/frikortsporring/jwks"));
 
 // 2. Velg nøkkel
-RSAKey rsaKey = (RSAKey) jwkSet.getKeys().get(0);
+ECKey ecKey = (ECKey) jwkSet.getKeys().get(0);
 
 // 3. Bygg JWE-header
-JWEHeader header = new JWEHeader.Builder(JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A256GCM)
-    .keyID(rsaKey.getKeyID())
+JWEHeader header = new JWEHeader.Builder(JWEAlgorithm.ECDH_ES, EncryptionMethod.A256GCM)
+    .keyID(ecKey.getKeyID())
     .build();
 
 // 4. Opprett JWE-objekt med JSON-payload
@@ -117,7 +118,7 @@ String jsonPayload = """
 JWEObject jweObject = new JWEObject(header, new Payload(jsonPayload));
 
 // 5. Krypter
-jweObject.encrypt(new RSAEncrypter(rsaKey));
+jweObject.encrypt(new ECDHEncrypter(ecKey));
 
 // 6. Serialiser til JWE Compact Serialization
 String jweString = jweObject.serialize();
@@ -131,6 +132,7 @@ String jweString = jweObject.serialize();
 <dependency>
     <groupId>com.nimbusds</groupId>
     <artifactId>nimbus-jose-jwt</artifactId>
+    <version>10.3</version>
 </dependency>
 ```
 
@@ -140,4 +142,4 @@ String jweString = jweObject.serialize();
 
 * [RFC 7516 – JWE-spesifikasjon](https://datatracker.ietf.org/doc/html/rfc7516)
 * [Scott Brady – JWE forklaring](https://www.scottbrady.io/jose/json-web-encryption)
-* [Nimbus JOSE + JWT eksempler](https://connect2id.com/products/nimbus-jose-jwt/examples/signed-and-encrypted-jwt)
+* [Nimbus JOSE + JWT – ECDH-ES eksempler](https://connect2id.com/products/nimbus-jose-jwt/examples/jwt-with-ec-signature)

@@ -64,6 +64,7 @@ Det dekrypterte innholdet i JWE-payloaden skal være følgende JSON:
 | `400 Bad Request`           | Ugyldig request (ugyldig JWE, ugyldig JSON, valideringsfeil, ugyldig DPoP-bevis). |
 | `401 Unauthorized`          | Autentisering feilet — token er ugyldig eller utløpt.                             |
 | `403 Forbidden`             | Konsumenten har ikke en aktiv avtale med Helfo som gir tilgang.                   |
+| `429 Too Many Requests`     | For mange forespørsler sendt på kort tid. Vent i henhold til `Retry-After`.      |
 | `500 Internal Server Error` | Uventet feil på serversiden.                                                      |
 | `501 Not Implemented`       | Ikke ferdig implementert, brukes under testing.                                   |
 
@@ -77,9 +78,9 @@ Responsen returneres som ukryptert JSON med `Content-Type: application/json`.
 }
 ```
 
-| Felt                  | Type    | Beskrivelse                                                                                                  |
-|-----------------------|---------|--------------------------------------------------------------------------------------------------------------|
-| `harEgenandelsfritak` | Boolean | `true` hvis borgeren er fritatt fra egenandel for den angitte tjenesten på den angitte datoen. `false` hvis fritak ikke er registrert. |
+| Felt                  | Type    | Beskrivelse                                                                                                                                       |
+|-----------------------|---------|---------------------------------------------------------------------------------------------------------------------------------------------------|
+| `harEgenandelsfritak` | Boolean | `true` hvis borgeren er fritatt fra egenandel for den angitte tjenesten på den angitte datoen. `false` hvis borger ikke er fritatt fra egenandel. | 
 
 
 ### Response headers
@@ -109,13 +110,13 @@ Ved feil (4xx/5xx) returneres en JSON-body med følgende struktur:
 
 ### Feilkoder
 
-| Feilkode                  | HTTP-status | Beskrivelse                                                                                  |
-|---------------------------|-------------|----------------------------------------------------------------------------------------------|
-| `UGYLDIG_REQUEST`         | 400         | Ugyldig JWE, ugyldig JSON i dekryptert payload, valideringsfeil, eller ugyldig DPoP-bevis.   |
-| `AUTENTISERING_FEILET`    | 401         | JWT-token er ugyldig, utløpt eller ikke tillitskontrollert.                                  |
-| `INGEN_TILGANG`           | 403         | Konsumenten mangler aktiv avtale eller nødvendige rettigheter.                               |
-| `FOR_MANGE_FORESPORSLER`  | 429         | Konsumenten har sendt for mange forespørsler i et gitt tidsrom.                              |
-| `INTERN_FEIL`             | 500         | Uventet feil på serversiden. Oppgi `correlationId` ved support-henvendelse.                  |
+| Feilkode                  | HTTP-status | Beskrivelse                                                                                |
+|---------------------------|-------------|--------------------------------------------------------------------------------------------|
+| `UGYLDIG_REQUEST`         | 400         | Ugyldig JWE, ugyldig JSON i dekryptert payload, valideringsfeil, eller ugyldig DPoP-bevis. |
+| `AUTENTISERING_FEILET`    | 401         | JWT-token er ugyldig, utløpt eller ikke tillitskontrollert.                                |
+| `INGEN_TILGANG`           | 403         | Konsumenten mangler aktiv avtale eller nødvendige rettigheter.                             |
+| `FOR_MANGE_FORESPORSLER`  | 429         | Konsumenten har sendt for mange forespørsler i et gitt tidsrom.                            |
+| `INTERN_FEIL`             | 500         | Uventet feil på serversiden. Oppgi `correlationId` ved support-henvendelse.                |
 
 ---
 

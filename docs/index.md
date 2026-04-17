@@ -51,7 +51,7 @@ API-et bruker **HelseID** for autentisering og autorisasjon. HelseID-tokenet **m
 
 1. Opprett en klient i NHNs selvbetjeningsportal med tilgang til API-et **«Helsedirektoratets API for frikortspørring»**.
 2. Konfigurer klienten med scope **`hdir:frikortsporring/read`**.
-3. Organisasjonen må være registrert hos Helfo. Det er et krav at organisasjonsnummer sendes som claim i tokenet.
+3. Organisasjonen må være registrert hos Helfo, blant annet fordi det er et krav at organisasjonsnummer sendes som claim i tokenet.
 
 Mer informasjon om HelseID og oppsett:
 [HelseID – NHN utviklerportal](https://utviklerportal.nhn.no/informasjonstjenester/helseid/)

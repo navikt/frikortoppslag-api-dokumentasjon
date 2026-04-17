@@ -24,18 +24,19 @@ Endepunkt for å hente de offentlige nøklene som brukes til å kryptere request
 
 ### Response body (200 OK)
 
-Responsen er et **JSON Web Key Set (JWKS)** med én eller flere offentlige RSA-nøkler:
+Responsen er et **JSON Web Key Set (JWKS)** med én eller flere offentlige EC-nøkler:
 
 ```json
 {
   "keys": [
     {
-      "kty": "RSA",
+      "kty": "EC",
       "use": "enc",
-      "alg": "RSA-OAEP-256",
+      "alg": "ECDH-ES",
       "kid": "frikortbifrost-enc-20260312-1",
-      "n": "sEe2Z3Xv...",
-      "e": "AQAB"
+      "crv": "P-256",
+      "x": "f83OJ3D2xF1Bg8vub9tLe1gHMzV76e8Tus9uPHvRVEU...",
+      "y": "x_FEzRu9m36HLN_tue659LNpXW6pCyStikYjKIWI5a0..."
     }
   ]
 }
@@ -43,14 +44,15 @@ Responsen er et **JSON Web Key Set (JWKS)** med én eller flere offentlige RSA-n
 
 ### Felter i JWK
 
-| Felt  | Type   | Beskrivelse                                           |
-|-------|--------|-------------------------------------------------------|
-| `kty` | String | Nøkkeltype — alltid `RSA`.                            |
-| `use` | String | Tiltenkt bruk — alltid `enc` (kryptering).            |
-| `alg` | String | Algoritme — alltid `RSA-OAEP-256`.                    |
-| `kid` | String | Nøkkel-ID. Må inkluderes i JWE-headeren ved kryptering. |
-| `n`   | String | RSA modulus (Base64url-kodet).                         |
-| `e`   | String | RSA eksponent (Base64url-kodet).                       |
+| Felt  | Type   | Beskrivelse                                                      |
+|-------|--------|------------------------------------------------------------------|
+| `kty` | String | Nøkkeltype — alltid `EC`.                                        |
+| `use` | String | Tiltenkt bruk — alltid `enc` (kryptering).                       |
+| `alg` | String | Algoritme — alltid `ECDH-ES`.                                    |
+| `kid` | String | Nøkkel-ID. Må inkluderes i JWE-headeren ved kryptering.          |
+| `crv` | String | Elliptisk kurve — alltid `P-256`.                                |
+| `x`   | String | X-koordinat for EC-nøkkelen (Base64url-kodet).                   |
+| `y`   | String | Y-koordinat for EC-nøkkelen (Base64url-kodet).                   |
 
 ---
 
