@@ -1,12 +1,12 @@
 [project]
-site_name = "Frikort Oppslag API"
+site_name = "Frikortoppslag API"
 site_description = "API-dokumentasjon for oppslag av egenandelsfritakstatus"
 
 extra_css = ["stylesheets/extra.css"]
 
 nav = [
     { "Oversikt" = "index.md" },
-    { "JWE-kryptering" = "jwe_ende_til_ende_kryptering.md" },
+    { "Kryptering av request" = "kryptering_av_request.md" },
     { "Endepunkter" = [
         { "Hent egenandelsfritakstatus" = "endepunkter/hent_frikortstatus.md" },
         { "Hent JWK-nøkler" = "endepunkter/jwk.md" },

@@ -32,7 +32,7 @@ Fritak gjelder hvis borgeren har innvilget frikort for det kalenderåret tjenest
 
 ### Request body
 
-Request-body sendes som en JWE-kryptert streng. Se [JWE-kryptering](../jwe_ende_til_ende_kryptering.md) for detaljer om kryptering. 
+Request-body sendes som en JWE-kryptert streng. Se [JWE-kryptering](../kryptering_av_request.md) for detaljer om kryptering. 
 Det dekrypterte innholdet i JWE-payloaden skal være følgende JSON:
 
 ```json
@@ -131,7 +131,7 @@ DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2Iiw...
 Content-Type: application/jose
 Correlation-Id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
 
-eyJhbGciOiJFQ0RILUVTIiwiZW5jIjoiQTI1NkdDTSIsImtpZCI6ImZyaWtvcnRiaWZyb3N0LWVuYy0yMDI2MDMxMi0xIn0...
+eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwia2lkIjoiZnJpa29ydGJpZnJvc3QtZW5jLTIwMjYwMzEyLTEifQ...
 ```
 
 ### Response — borger er fritatt

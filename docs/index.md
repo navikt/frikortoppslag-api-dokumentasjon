@@ -1,4 +1,4 @@
-# Frikort Oppslag API
+# Frikortoppslag API
 
 Frikortløsningen tilbyr API-baserte tjenester for samhandling med behandlere, apotek og andre aktører i helsesektoren som har avtale med Helfo om direkte oppgjør.
 
@@ -14,7 +14,7 @@ For å kunne bruke API-et må følgende være på plass:
 
 1. Helseaktøren må være registrert hos Helfo med gyldig avtale om direkte oppgjør. Se [helfo.no](https://www.helfo.no/) for mer informasjon.
 2. Helseaktøren må ha en klient registrert hos HelseID med tilgang til API-et (se [Autentisering](#autentisering-og-autorisasjon)).
-3. Request-body må krypteres med JWE (se [JWE-kryptering](jwe_ende_til_ende_kryptering.md)).
+3. Request-body må krypteres med JWE (se [JWE-kryptering](kryptering_av_request.md)).
 
 ## Miljøer
 
@@ -51,7 +51,6 @@ API-et bruker **HelseID** for autentisering og autorisasjon. HelseID-tokenet **m
 
 1. Opprett en klient i NHNs selvbetjeningsportal med tilgang til API-et **«Helsedirektoratets API for frikortspørring»**.
 2. Konfigurer klienten med scope **`hdir:frikortsporring/read`**.
-3. Organisasjonen må være registrert hos Helfo, blant annet fordi det er et krav at organisasjonsnummer sendes som claim i tokenet.
 
 Mer informasjon om HelseID og oppsett:
 [HelseID – NHN utviklerportal](https://utviklerportal.nhn.no/informasjonstjenester/helseid/)
