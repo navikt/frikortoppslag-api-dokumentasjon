@@ -6,13 +6,13 @@ extra_css = ["stylesheets/extra.css"]
 
 nav = [
     { "Oversikt" = "index.md" },
+    { "JWE-kryptering" = "jwe_ende_til_ende_kryptering.md" },
     { "Endepunkter" = [
         { "Hent egenandelsfritakstatus" = "endepunkter/hent_frikortstatus.md" },
         { "Hent JWK-nøkler" = "endepunkter/jwk.md" },
-        { "Kodeverk" = "endepunkter/kodeverk.md" },
     ] },
-    { "JWE-kryptering" = "jwe_ende_til_ende_kryptering.md" },
     { "Generelt" = [
+        { "Kodeverk" = "generelt/kodeverk.md" },
         { "Begrepsliste" = "generelt/begrepsliste.md" },
         { "JSON-konvensjoner" = "generelt/json_konvensjoner.md" },
         { "Endringslogg" = "generelt/endringslogg.md" },

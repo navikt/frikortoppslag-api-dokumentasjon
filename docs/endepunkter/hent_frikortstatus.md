@@ -49,7 +49,7 @@ Det dekrypterte innholdet i JWE-payloaden skal være følgende JSON:
 | Felt              | Type   | Påkrevd | Beskrivelse                                                                            |
 |-------------------|--------|---------|----------------------------------------------------------------------------------------|
 | `borgerIdent`     | String | Ja      | Fødselsnummer (11 siffer) eller D-nummer (11 siffer) for borgeren det gjøres oppslag for. |
-| `tjenestetypeKode`| String | Ja      | Kode for tjenestetype. Se [kodeverk](kodeverk.md) for gyldige verdier.                 |
+| `tjenestetypeKode`| String | Ja      | Kode for tjenestetype. Se [kodeverk](../generelt/kodeverk.md) for gyldige verdier.     |
 | `tjenestedato`    | String | Ja      | Dato for behandlingen eller utleveringen (ISO 8601, `YYYY-MM-DD`). Fritaksstatus vurderes for denne datoen. |
 
 ---
