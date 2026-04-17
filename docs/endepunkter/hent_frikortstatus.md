@@ -4,8 +4,7 @@ Endepunkt for å sjekke om en borger er fritatt fra å betale egenandel for en g
 
 Fritak gjelder hvis borgeren har innvilget frikort for det kalenderåret tjenestedatoen faller i. For tjenester levert av apotek eller bandasjist gjelder i tillegg at minstepensjonister er fritatt.
 
-NB: "Reservasjon"
-    Borgere kan reservere seg mot den automatiske frikortordningen. For borgere med reservasjon vil tjenesten alltid svare negativt (`harEgenandelsfritak: false`). Borgere med reservasjon må selv fremvise frikortbevis.
+**Reservasjon:** Borgere kan reservere seg mot den automatiske frikortordningen. For borgere med reservasjon vil tjenesten alltid svare negativt (`harEgenandelsfritak: false`). Borgere med reservasjon må selv fremvise frikortbevis.
 
 
 ---
@@ -132,7 +131,7 @@ DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2Iiw...
 Content-Type: application/jose
 Correlation-Id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
 
-eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwia2lkIjoiZnJpa29ydGJpZnJvc3QtZW5jLTIwMjYwMzEyLTEifQ...
+eyJhbGciOiJFQ0RILUVTIiwiZW5jIjoiQTI1NkdDTSIsImtpZCI6ImZyaWtvcnRiaWZyb3N0LWVuYy0yMDI2MDMxMi0xIn0...
 ```
 
 ### Response — borger er fritatt

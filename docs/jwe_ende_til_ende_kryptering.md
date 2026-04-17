@@ -132,7 +132,6 @@ String jweString = jweObject.serialize();
 <dependency>
     <groupId>com.nimbusds</groupId>
     <artifactId>nimbus-jose-jwt</artifactId>
-    <version>10.3</version>
 </dependency>
 ```
 
@@ -142,4 +141,4 @@ String jweString = jweObject.serialize();
 
 * [RFC 7516 – JWE-spesifikasjon](https://datatracker.ietf.org/doc/html/rfc7516)
 * [Scott Brady – JWE forklaring](https://www.scottbrady.io/jose/json-web-encryption)
-* [Nimbus JOSE + JWT – ECDH-ES eksempler](https://connect2id.com/products/nimbus-jose-jwt/examples/jwt-with-ec-signature)
+* [Nimbus JOSE + JWT](https://connect2id.com/products/nimbus-jose-jwt/examples/signed-and-encrypted-jwt)

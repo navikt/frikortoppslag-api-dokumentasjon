@@ -58,11 +58,11 @@ Responsen er et **JSON Web Key Set (JWKS)** med én eller flere offentlige EC-n�
 
 ## Nøkkelrotasjon og caching
 
-Nøklene roteres jevnlig. Hver nøkkel har en utløpsdato.
+Nøklene roteres jevnlig. Hver nøkkel har et `exp`-felt (Unix timestamp i sekunder) som angir utløpsdato.
 
 **Anbefalt praksis for konsumenter:**
 
 - Det er tillatt å cache nøkler lokalt for å unngå å hente dem ved hvert kall.
-- Når en cachet nøkkel har utløpt (basert på utløpsdato), må konsumenten hente oppdaterte nøkler fra dette endepunktet.
+- Når en cachet nøkkel har utløpt (sjekk `exp`-feltet), må konsumenten hente oppdaterte nøkler fra dette endepunktet.
 - Bruk alltid `kid`-feltet fra nøkkelen i JWE-headeren, slik at mottaker kan finne riktig nøkkel for dekryptering.
 - JWKS-endepunktet kan returnere flere nøkler samtidig. Bruk den nøkkelen som har lengst tid til utløp.
