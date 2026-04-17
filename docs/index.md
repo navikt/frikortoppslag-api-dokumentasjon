@@ -63,6 +63,8 @@ Mer informasjon om HelseID og oppsett:
 En fullstendig OpenAPI 3.1-spesifikasjon for API-et er tilgjengelig:
 [frikortsporring-api.yaml](https://github.com/navikt/frikort-bifrost/blob/main/frikortsporring-api.yaml)
 
+NB: Her kommer link til swagger
+
 ---
 
 ## Endringslogg
