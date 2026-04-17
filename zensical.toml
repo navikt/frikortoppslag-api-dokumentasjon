@@ -1,22 +1,22 @@
 [project]
-site_name = "Frikort-APIer"
-site_description = "API-dokumentasjon for Frikortløsningen"
+site_name = "Frikort Oppslag API"
+site_description = "API-dokumentasjon for oppslag av egenandelsfritakstatus"
 
 extra_css = ["stylesheets/extra.css"]
 
 nav = [
     { "Oversikt" = "index.md" },
     { "Endepunkter" = [
-        { "Hent frikortstatus" = "endepunkter/hent_frikortstatus.md" },
-        { "JWK" = "endepunkter/jwk.md" },
+        { "Hent egenandelsfritakstatus" = "endepunkter/hent_frikortstatus.md" },
+        { "Hent JWK-nøkler" = "endepunkter/jwk.md" },
+        { "Kodeverk" = "endepunkter/kodeverk.md" },
     ] },
-    { "JWK ende-til-ende-kryptering" = "jwk_ende_til_ende_kryptering.md" },
+    { "JWE-kryptering" = "jwe_ende_til_ende_kryptering.md" },
     { "Generelt" = [
         { "Begrepsliste" = "generelt/begrepsliste.md" },
         { "JSON-konvensjoner" = "generelt/json_konvensjoner.md" },
         { "Endringslogg" = "generelt/endringslogg.md" },
     ] },
-    { "Endringslogg" = "endringslogg.md" }
 ]
 
 [project.theme]

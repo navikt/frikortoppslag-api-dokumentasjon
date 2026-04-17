@@ -1,96 +1,138 @@
-# JWE-kryptering av POST-requests – `POST/JWE`
+# JWE-kryptering av request
 
-API-et bruker **JWE (JSON Web Encryption)** for å kryptere enkelte POST-forespørsler.
-Det betyr at klienten krypterer forespørselen med vår offentlige nøkkel fra et publisert sertifikat.
+API-et bruker **JWE (JSON Web Encryption)** for å kryptere request-body i POST-forespørsler.
+Klienten krypterer JSON-payloaden med vår offentlige nøkkel, hentet fra [JWKS-endepunktet](endepunkter/jwk.md).
 
-**Merk:** JWE-signering benyttes **ikke**. Kun kryptering er i bruk. Det betyr at klienten ikke trenger å ha et eget sertifikat for signering.
-
----
-
-## Hva er JWE?
-
-**JSON Web Encryption (JWE)** er et URL-sikkert og kompakt format for kryptering av strukturert data ved hjelp av JSON-baserte mekanismer.
-Formatet brukes når man trenger å sende sensitive data kryptert, for eksempel i en POST-request til et API.
-
-Et JWE består av fem deler, separert med punktum:
-
-```
-<protected_header>.<encrypted_key>.<initialization_vector>.<ciphertext>.<authentication_tag>
-```
+**Merk:** JWE-signering benyttes **ikke**. Kun kryptering er i bruk. Klienten trenger ikke et eget sertifikat for signering.
 
 ---
 
-## Komponenter i en JWE
+## Algoritmer
 
-### 1. Protected Header
+| Parameter | Verdi           | Beskrivelse                                 |
+|-----------|-----------------|---------------------------------------------|
+| `alg`     | `RSA-OAEP-256`  | Asymmetrisk algoritme for kryptering av CEK |
+| `enc`     | `A256GCM`       | Symmetrisk algoritme for kryptering av innhold |
 
-Inneholder metadata som beskriver hvordan JWE er kryptert, og hvilken type innhold det bærer.
+---
 
-Eksempel:
+## Steg-for-steg: Kryptere en request
+
+### 1. Hent offentlig nøkkel
+
+Gjør et `GET`-kall til [/api/frikortsporring/jwks](endepunkter/jwk.md) for å hente gjeldende JWKS.
+Velg en nøkkel fra `keys`-arrayet. Noter `kid`-verdien — den må inkluderes i JWE-headeren.
+
+### 2. Bygg JSON-payload
+
+Lag JSON-objektet som skal krypteres, f.eks.:
+
+```json
+{
+  "borgerIdent": "12345678901",
+  "tjenestetypeKode": "LE",
+  "tjenestedato": "2026-06-15"
+}
+```
+
+### 3. Krypter med JWE
+
+Krypter JSON-payloaden til en **JWE Compact Serialization**-streng med følgende header-parametre:
 
 ```json
 {
   "alg": "RSA-OAEP-256",
   "enc": "A256GCM",
-  "kid": "12345",
-  "typ": "JWT",
-  "cty": "JWT",
-  "zip": "DEF"
+  "kid": "<kid fra JWK>"
 }
 ```
 
-Forklaring på feltene:
-
-* `alg` – Asymmetrisk algoritme brukt for å kryptere nøkkelen (f.eks. `RSA-OAEP-256`)
-* `enc` – Symmetrisk algoritme brukt på innholdet (f.eks. `A256GCM`)
-* `kid` – ID til nøkkelen som brukes (matcher en JWK fra vårt nøkkelsett)
-* `typ` – Typen token, ofte `JWT`
-* `cty` – Content type (innholdstype), ofte også `JWT`
-* `zip` – Valgfri kompresjonsalgoritme brukt før kryptering (f.eks. `DEF`)
-
----
-
-### 2. Encrypted Key (CEK)
-
-En tilfeldig generert symmetrisk nøkkel (Content Encryption Key) brukes til å kryptere selve innholdet.
-Denne nøkkelen krypteres med mottakerens offentlige nøkkel (asymmetrisk).
-
----
-
-### 3. Initialization Vector (IV)
-
-En tilfeldig verdi som brukes av den symmetriske algoritmen for å sikre unik kryptering for hver melding.
-Må være forskjellig for hver forespørsel.
-
----
-
-### 4. Ciphertext (Payload)
-
-Selve dataene som krypteres. I APIet er dette en **nested JWT**.
-
-Struktur på JWT:
+Resultatet er en streng med fem Base64url-kodede deler separert med punktum:
 
 ```
-<header>.<payload>.<signature>
+<protected_header>.<encrypted_key>.<initialization_vector>.<ciphertext>.<authentication_tag>
 ```
 
-Eksempel på dekryptert payload:
+### 4. Send request
 
-```json
-{
-  "praksisId": "1000005649",
-  "behandlerkrav": { }
-}
+Send JWE-strengen som request-body med `Content-Type: application/jose`:
+
+```http
+POST /api/frikortsporring/helseid/v1 HTTP/1.1
+Host: frikortbifrost.nav.no
+Authorization: DPoP eyJ...
+DPoP: eyJ...
+Content-Type: application/jose
+
+eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwia2lkIjoiZnJpa29ydGJpZnJvc3QtZW5jLTIwMjYwMzEyLTEifQ.OKOawDo13gRp2ojaHV7LFpZcgV7T6DVZKTyKOMTYUmKoTCVJRgckCL9kiMT03JGe...
 ```
 
-Payload signeres **ikke** av klienten i dette oppsettet. Kun kryptering brukes. (Noen implementasjoner av JWE støtter både signering og kryptering, men det er ikke i bruk her.)
+Responsen returneres som **ukryptert JSON** (`application/json`).
 
 ---
 
-### 5. Authentication Tag
+## Hva er JWE?
 
-Brukes ved autentisert kryptering (f.eks. `AES-GCM`) for å sikre at innholdet ikke er endret under transport.
-Dette er en integritetsbeskyttelse, ikke en signatur.
+**JSON Web Encryption (JWE)** er et kompakt format for kryptering av data ved hjelp av JSON-baserte mekanismer, definert i [RFC 7516](https://datatracker.ietf.org/doc/html/rfc7516).
+
+### Komponenter i en JWE Compact Serialization
+
+| Del | Beskrivelse |
+|-----|-------------|
+| **Protected Header** | Metadata om krypteringen (`alg`, `enc`, `kid`). Base64url-kodet. |
+| **Encrypted Key** | Tilfeldig generert symmetrisk nøkkel (CEK), kryptert med mottakerens offentlige nøkkel. |
+| **Initialization Vector** | Tilfeldig verdi for unik kryptering per melding. Må være unik for hver request. |
+| **Ciphertext** | Den krypterte JSON-payloaden. |
+| **Authentication Tag** | Integritetsbeskyttelse (AES-GCM) som sikrer at innholdet ikke er endret under transport. |
+
+---
+
+## Kodeeksempel (Java med Nimbus JOSE + JWT)
+
+```java
+import com.nimbusds.jose.*;
+import com.nimbusds.jose.crypto.RSAEncrypter;
+import com.nimbusds.jose.jwk.*;
+
+// 1. Hent JWKS fra endepunktet
+JWKSet jwkSet = JWKSet.load(new URL("https://frikortbifrost.nav.no/api/frikortsporring/jwks"));
+
+// 2. Velg nøkkel
+RSAKey rsaKey = (RSAKey) jwkSet.getKeys().get(0);
+
+// 3. Bygg JWE-header
+JWEHeader header = new JWEHeader.Builder(JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A256GCM)
+    .keyID(rsaKey.getKeyID())
+    .build();
+
+// 4. Opprett JWE-objekt med JSON-payload
+String jsonPayload = """
+    {
+      "borgerIdent": "12345678901",
+      "tjenestetypeKode": "LE",
+      "tjenestedato": "2026-06-15"
+    }
+    """;
+
+JWEObject jweObject = new JWEObject(header, new Payload(jsonPayload));
+
+// 5. Krypter
+jweObject.encrypt(new RSAEncrypter(rsaKey));
+
+// 6. Serialiser til JWE Compact Serialization
+String jweString = jweObject.serialize();
+
+// 7. Send jweString som request-body med Content-Type: application/jose
+```
+
+**Maven-avhengighet:**
+
+```xml
+<dependency>
+    <groupId>com.nimbusds</groupId>
+    <artifactId>nimbus-jose-jwt</artifactId>
+</dependency>
+```
 
 ---
 
