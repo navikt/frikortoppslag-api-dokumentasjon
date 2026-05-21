@@ -73,7 +73,7 @@ Responsen returneres som ukryptert JSON med `Content-Type: application/json`.
 
 | Felt              | Type   | Beskrivelse                                                                |
 |-------------------|--------|----------------------------------------------------------------------------|
-| `overordnetStatus`| String | Samlet status for alle sjekker. `OK` hvis alle sjekker er OK eller IKKE_IMPLEMENTERT. `FEIL` hvis én eller flere sjekker feiler. |
+| `overordnetStatus`| String | Samlet status for alle sjekker. `OK` hvis alle sjekker er OK eller IKKE_IMPLEMENTERT. `FEIL` hvis én eller flere sjekker feiler eller ikke ble sjekket. |
 | `autentisering`   | Sjekk  | Resultat av DPoP-autentiseringssjekken.                                    |
 | `kryptering`      | Sjekk  | Resultat av JWE-dekrypteringssjekken.                                      |
 | `hdirAvtale`      | Sjekk  | Resultat av avtalesjekk mot Helsedirektoratets register. Se [Kontroll av avtaleforhold](../index.md#kontroll-av-avtaleforhold). |
@@ -91,6 +91,7 @@ Responsen returneres som ukryptert JSON med `Content-Type: application/json`.
 |----------------------|------------------------------------------------------------------|
 | `OK`                 | Sjekken ble utført og bestått.                                   |
 | `FEIL`               | Sjekken ble utført, men feilet.                                  |
+| `IKKE_SJEKKET`       | Sjekken ble ikke utført fordi en foregående sjekk feilet.        |
 | `IKKE_IMPLEMENTERT`  | Sjekken er ikke implementert ennå.                               |
 
 ### Response headers
@@ -158,8 +159,8 @@ Correlation-Id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
     "beskrivelse": "JWE-dekryptering feilet: ugyldig nøkkel"
   },
   "hdirAvtale": {
-    "status": "IKKE_IMPLEMENTERT",
-    "beskrivelse": "Avtalevalidering er ikke implementert ennå"
+    "status": "IKKE_SJEKKET",
+    "beskrivelse": "Ikke sjekket på grunn av feil i foregående steg"
   }
 }
 ```
