@@ -62,7 +62,7 @@ Det dekrypterte innholdet i JWE-payloaden skal være følgende JSON:
 | `200 OK`                    | Oppslaget var vellykket. Se response body.                                        |
 | `400 Bad Request`           | Ugyldig request (ugyldig JWE, ugyldig JSON, valideringsfeil, ugyldig DPoP-bevis). |
 | `401 Unauthorized`          | Autentisering feilet — token er ugyldig eller utløpt.                             |
-| `403 Forbidden`             | Konsumenten har ikke en aktiv avtale med Helfo som gir tilgang.                   |
+| `403 Forbidden`             | Konsumenten har ikke en aktiv avtale med Helfo som gir tilgang. Se [Kontroll av avtaleforhold](../index.md#kontroll-av-avtaleforhold). |
 | `429 Too Many Requests`     | For mange forespørsler sendt på kort tid. Vent i henhold til `Retry-After`.      |
 | `500 Internal Server Error` | Uventet feil på serversiden.                                                      |
 | `501 Not Implemented`       | Ikke ferdig implementert, brukes under testing.                                   |
@@ -97,7 +97,8 @@ Ved feil (4xx/5xx) returneres en JSON-body med følgende struktur:
 {
   "correlationId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   "feilkode": "UGYLDIG_REQUEST",
-  "melding": "Request-body er ikke gyldig JWE Compact Serialization"
+  "melding": "Request-body er ikke gyldig JWE Compact Serialization",
+  "timestamp": "1716283200000"
 }
 ```
 
@@ -106,6 +107,7 @@ Ved feil (4xx/5xx) returneres en JSON-body med følgende struktur:
 | `correlationId` | String | Unik ID for kallet (UUID). Oppgi denne ved support-henvendelse.       |
 | `feilkode`      | String | Maskinlesbar feilkode — se tabell under.                              |
 | `melding`       | String | Menneskelig lesbar feilmelding (ikke egnet for maskinell tolkning).    |
+| `timestamp`     | String | Tidspunkt for feilen (Unix millisekunder siden epoch).                |
 
 ### Feilkoder
 
@@ -168,7 +170,8 @@ Correlation-Id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
 {
   "correlationId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   "feilkode": "UGYLDIG_REQUEST",
-  "melding": "Valideringsfeil: 'tjenestetypeKode' er ikke en gyldig kode"
+  "melding": "Valideringsfeil: 'tjenestetypeKode' er ikke en gyldig kode",
+  "timestamp": "1716283200000"
 }
 ```
 
@@ -182,6 +185,7 @@ Correlation-Id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
 {
   "correlationId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   "feilkode": "AUTENTISERING_FEILET",
-  "melding": "JWT-token er ugyldig eller utløpt"
+  "melding": "JWT-token er ugyldig eller utløpt",
+  "timestamp": "1716283200000"
 }
 ```

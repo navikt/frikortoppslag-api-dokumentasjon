@@ -30,6 +30,7 @@ For å kunne bruke API-et må følgende være på plass:
 | Navn | Path | Metode | Beskrivelse |
 |------|------|--------|-------------|
 | [Hent egenandelsfritakstatus](endepunkter/hent_frikortstatus.md) | `/api/frikortsporring/helseid/v1` | POST | Sjekker om en borger er fritatt fra egenandel for en gitt tjenestetype på en gitt dato. |
+| [Klientstatus](endepunkter/klientstatus.md) | `/api/frikortsporring/helseid/v1/klientstatus` | POST | Verifiserer at integrasjonen er korrekt satt opp (autentisering, kryptering og avtaleforhold). |
 | [Hent JWK-nøkler](endepunkter/jwk.md) | `/api/frikortsporring/jwks` | GET | Henter offentlige nøkler for JWE-kryptering av request. |
 
 ### Typer endepunkt
@@ -55,14 +56,31 @@ API-et bruker **HelseID** for autentisering og autorisasjon. HelseID-tokenet **m
 Mer informasjon om HelseID og oppsett:
 [HelseID – NHN utviklerportal](https://utviklerportal.nhn.no/informasjonstjenester/helseid/)
 
+### Kontroll av avtaleforhold
+
+!!! warning "Kommende funksjonalitet"
+    Avtalevalidering er under utvikling og er ikke implementert ennå. Dokumentasjonen beskriver planlagt oppførsel.
+
+I tillegg til autentisering via HelseID, vil API-et kontrollere at den som gjør oppslaget har en aktiv avtale med Helsedirektoratet. Denne kontrollen gjøres mot Helsedirektoratets register over avtaleforhold, og utføres **før** noe svar returneres.
+
+Registeret sjekkes i følgende rekkefølge, basert på informasjonen i claims fra HelseID-tokenet:
+
+1. **Helsepersonellets fødselsnummer (PID-claim):** Dersom tokenet inneholder et PID-claim (innlogget helsepersonell), brukes fødselsnummeret til den innloggede brukeren for å slå opp i avtaleregisteret.
+2. **Underenhetens organisasjonsnummer (`orgnr_child`):** Dersom det ikke finnes et PID-claim i tokenet, brukes organisasjonsnummeret til underenheten (child) for oppslag.
+3. **Hovedenhetens organisasjonsnummer (`orgnr_parent`):** Dersom hverken PID-claim eller `orgnr_child` er tilgjengelig, brukes organisasjonsnummeret til hovedenheten (parent) for oppslag.
+
+Dersom ingen av identifikatorene gir treff i avtaleregisteret, vil API-et returnere **`403 Forbidden`** med feilkode `INGEN_TILGANG`.
+
 ---
 
 ## OpenAPI-spesifikasjon
 
-En fullstendig OpenAPI 3.1-spesifikasjon for API-et er tilgjengelig:
-[frikortsporring-api.yaml](https://github.com/navikt/frikort-bifrost/blob/main/frikortsporring-api.yaml)
+Swagger for OpenAPI: [SWAGGER - FRIKORTSPORRING-API](https://frikortbifrost-q2.ekstern.dev.nav.no/swagger-ui/index.html)
+NB: Denne er test-miljø per nå.
 
-NB: Her kommer link til swagger
+En fullstendig OpenAPI 3.1-spesifikasjon for API-et er tilgjengelig:
+[frikortsporring-api.yaml](https://github.com/navikt/frikort-bifrost/blob/main/src/main/resources/openapi/frikortsporring-api.yaml)
+NB: Ikke åpen utenfor NAV. 
 
 ---
 

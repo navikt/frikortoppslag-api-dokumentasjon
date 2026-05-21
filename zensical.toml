@@ -9,6 +9,7 @@ nav = [
     { "Kryptering av request" = "kryptering_av_request.md" },
     { "Endepunkter" = [
         { "Hent egenandelsfritakstatus" = "endepunkter/hent_frikortstatus.md" },
+        { "Klientstatus" = "endepunkter/klientstatus.md" },
         { "Hent JWK-nøkler" = "endepunkter/jwk.md" },
     ] },
     { "Generelt" = [
