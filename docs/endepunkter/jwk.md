@@ -24,7 +24,7 @@ Endepunkt for å hente de offentlige nøklene som brukes til å kryptere request
 
 ### Response body (200 OK)
 
-Responsen er et **JSON Web Key Set (JWKS)** med én eller flere offentlige RSA-nøkler:
+Responsen er et **JSON Web Key Set (JWKS)** med én offentlig RSA-nøkkel — nøkkelen med lengst gjenværende levetid:
 
 ```json
 {
@@ -65,4 +65,3 @@ Nøklene roteres jevnlig. Hver nøkkel har et `exp`-felt (Unix timestamp i sekun
 - Det er tillatt å cache nøkler lokalt for å unngå å hente dem ved hvert kall.
 - Når en cachet nøkkel har utløpt (sjekk `exp`-feltet), må konsumenten hente oppdaterte nøkler fra dette endepunktet.
 - Bruk alltid `kid`-feltet fra nøkkelen i JWE-headeren, slik at mottaker kan finne riktig nøkkel for dekryptering.
-- JWKS-endepunktet kan returnere flere nøkler samtidig. Bruk den nøkkelen som har lengst tid til utløp.

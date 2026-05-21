@@ -2,7 +2,7 @@
 
 Endepunkt som lar konsumenter verifisere at integrasjonen er korrekt satt opp, uten å gjøre oppslag på ekte borgere.
 
-Endepunktet validerer hele kjeden — autentisering, kryptering og avtaleforhold — og returnerer status for hver enkelt sjekk.
+Endepunktet validerer kryptering og avtaleforhold, og returnerer status for hver sjekk. Autentisering (DPoP) valideres først — ved autentiseringsfeil returneres en vanlig feilrespons (se [feilresponser](hent_frikortstatus.md#feilresponser)) før klientstatus-sjekken utføres.
 
 ---
 
@@ -41,8 +41,8 @@ Innholdet i den dekrypterte payloaden er ikke relevant for statussjekken — det
 
 | Statuskode                  | Beskrivelse                                               |
 |-----------------------------|-----------------------------------------------------------|
-| `200 OK`                    | Statussjekken ble utført. Se response body for resultat.  |
-| `400 Bad Request`           | Ugyldig request (ugyldig JWE eller ugyldig DPoP-bevis).   |
+| `200 OK`                    | Autentisering var vellykket. Se response body for resultat av øvrige sjekker. |
+| `400 Bad Request`           | Ugyldig request (ugyldig DPoP-bevis).                     |
 | `401 Unauthorized`          | Autentisering feilet — token er ugyldig eller utløpt.     |
 | `429 Too Many Requests`     | For mange forespørsler sendt på kort tid.                 |
 | `500 Internal Server Error` | Uventet feil på serversiden.                              |
@@ -62,7 +62,7 @@ Responsen returneres som ukryptert JSON med `Content-Type: application/json`.
     "status": "OK",
     "beskrivelse": "JWE-dekryptering vellykket"
   },
-  "hdirAvtale": {
+  "helfoAvtale": {
     "status": "IKKE_IMPLEMENTERT",
     "beskrivelse": "Avtalevalidering er ikke implementert ennå"
   }
@@ -73,17 +73,17 @@ Responsen returneres som ukryptert JSON med `Content-Type: application/json`.
 
 | Felt              | Type   | Beskrivelse                                                                |
 |-------------------|--------|----------------------------------------------------------------------------|
-| `overordnetStatus`| String | Samlet status for alle sjekker. `OK` hvis alle sjekker er OK eller IKKE_IMPLEMENTERT. `FEIL` hvis én eller flere sjekker feiler eller ikke ble sjekket. |
-| `autentisering`   | Sjekk  | Resultat av DPoP-autentiseringssjekken.                                    |
+| `overordnetStatus`| String | Samlet status for alle sjekker. `OK` hvis alle sjekker er OK eller IKKE_IMPLEMENTERT. `FEIL` hvis én eller flere sjekker feiler. |
+| `autentisering`   | Sjekk  | Resultat av DPoP-autentiseringssjekken. Vil alltid være `OK` i 200-responsen, ettersom autentiseringsfeil gir en feilrespons (401/400) før denne sjekken nås. |
 | `kryptering`      | Sjekk  | Resultat av JWE-dekrypteringssjekken.                                      |
-| `hdirAvtale`      | Sjekk  | Resultat av avtalesjekk mot Helsedirektoratets register. Se [Kontroll av avtaleforhold](../index.md#kontroll-av-avtaleforhold). |
+| `helfoAvtale`      | Sjekk  | Resultat av avtalesjekk mot Helsedirektoratets register. Se [Kontroll av avtaleforhold](../index.md#kontroll-av-avtaleforhold). |
 
 ### Sjekk-objekt
 
-| Felt         | Type   | Beskrivelse                             |
-|--------------|--------|-----------------------------------------|
-| `status`     | String | `OK`, `FEIL` eller `IKKE_IMPLEMENTERT`. |
-| `beskrivelse`| String | Beskrivelse av resultatet.              |
+| Felt         | Type   | Beskrivelse                              |
+|--------------|--------|------------------------------------------|
+| `status`     | String | `OK`, `FEIL` eller `IKKE_IMPLEMENTERT`.  |
+| `beskrivelse`| String | Menneskelig lesbar beskrivelse av resultatet. |
 
 ### Mulige statusverdier
 
@@ -91,7 +91,6 @@ Responsen returneres som ukryptert JSON med `Content-Type: application/json`.
 |----------------------|------------------------------------------------------------------|
 | `OK`                 | Sjekken ble utført og bestått.                                   |
 | `FEIL`               | Sjekken ble utført, men feilet.                                  |
-| `IKKE_SJEKKET`       | Sjekken ble ikke utført fordi en foregående sjekk feilet.        |
 | `IKKE_IMPLEMENTERT`  | Sjekken er ikke implementert ennå.                               |
 
 ### Response headers
@@ -99,6 +98,10 @@ Responsen returneres som ukryptert JSON med `Content-Type: application/json`.
 | Header           | Beskrivelse                                                        |
 |------------------|--------------------------------------------------------------------|
 | `Correlation-Id` | Unik ID for kallet. Oppgi denne ved support-henvendelse.           |
+
+### Feilresponser
+
+Ved autentiseringsfeil (400/401) returneres en feilrespons på samme format som for [hent egenandelsfritakstatus](hent_frikortstatus.md#feilresponser).
 
 ---
 
@@ -134,7 +137,7 @@ Correlation-Id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
     "status": "OK",
     "beskrivelse": "JWE-dekryptering vellykket"
   },
-  "hdirAvtale": {
+  "helfoAvtale": {
     "status": "OK",
     "beskrivelse": "Aktiv avtale funnet"
   }
@@ -158,9 +161,24 @@ Correlation-Id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
     "status": "FEIL",
     "beskrivelse": "JWE-dekryptering feilet: ugyldig nøkkel"
   },
-  "hdirAvtale": {
-    "status": "IKKE_SJEKKET",
-    "beskrivelse": "Ikke sjekket på grunn av feil i foregående steg"
+  "helfoAvtale": {
+    "status": "IKKE_IMPLEMENTERT",
+    "beskrivelse": "Avtalevalidering er ikke implementert ennå"
   }
+}
+```
+
+### Response — autentisering feilet
+
+```http
+HTTP/1.1 401 Unauthorized
+Content-Type: application/json
+Correlation-Id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+
+{
+  "correlationId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "feilkode": "AUTENTISERING_FEILET",
+  "melding": "JWT-token er ugyldig eller utløpt",
+  "timestamp": "1716283200000"
 }
 ```

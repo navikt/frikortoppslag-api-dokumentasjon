@@ -1,0 +1,689 @@
+openapi: 3.1.0
+info:
+  title: Egenandelsfritak API
+  version: 1.0.0
+  description: |
+    API for oppslag av status for egenandelsfritak i forbindelse med behandling eller utlevering
+    av legemidler og utstyr på blå resept.
+
+    ## Formål
+
+    APIet gir behandlere, bandasjister og apotek mulighet til å slå opp om en pasient/kunde
+    skal betale egenandel for en gitt tjeneste på en gitt dato.
+
+    **Behandlere**: Fritak gjelder borgere som er innvilget frikort for kalenderåret 
+    oppgitt tjenestedato tilhører.
+
+    **Apotek og bandasjister**: Fritak gjelder borgere som er innvilget frikort for kalenderåret 
+    oppgitt tjenestedato tilhører, eller var minstepensjonist etter blåreseptregelverket på 
+    oppgitt tjenestedato.
+
+    **Reservasjon**: Merk at borgere kan reservere seg mot den automatiske frikortordningen, som 
+    også innebærer at tjenesten ikke vil utlevere informasjon om egenandelsfritak. Tjenesten 
+    kan heller ikke utlevere informasjon om at borgeren har reservert seg. For borgere med 
+    reservasjon vil tjenesten derfor alltid svare negativt. Borgere med reservasjon må alltid selv 
+    fremvise frikortbevis, hvis de skal få egenandelsfritak på grunn av innvilget frikort.
+    
+    **Tjenstlig behov**: Tjenesten skal kun brukes i forbindelse med konkret behandling eller 
+    utlevering av medisiner/utstyr på blå resept. Alle kall logges, og kontroller gjøres jevnlig. 
+    Tilgang kan stenges for aktører som gjør oppslag uten tjenstlig behov.
+
+    ## Autentisering
+
+    APIet krever JWT-token og støtter en token-utsteder:
+
+    - HelseId
+    
+    HelseId-token **må** bruke DPoP ([RFC 9449](https://datatracker.ietf.org/doc/html/rfc9449)).
+
+    ## Kryptering av request
+
+    Request-body **skal** krypteres med JWE (JSON Web Encryption) i henhold til
+    [RFC 7516](https://datatracker.ietf.org/doc/html/rfc7516).
+    Den offentlige JWK-nøkkelen som skal brukes til kryptering, hentes fra `/jwks`-endepunktet.
+
+    Algoritmer som brukes:
+    - Key encryption: `RSA-OAEP-256`
+    - Content encryption: `A256GCM`
+
+    Den krypterte payloaden sendes som en JWE Compact Serialization-streng i request body
+    med `Content-Type: application/jose`.
+
+    Response-payload krypteres ikke.
+
+    ## Testmiljø
+
+    Testmiljøet er tilgjengelig på `https://frikortbifrost.ekstern.dev.nav.no`. Se utviklerportalen 
+    for informasjon om testdata og oppsett av test-tokens.
+
+  contact:
+    name: Frikort forvaltningsteam
+    email: frikort.teknisk@nav.no
+
+servers:
+  - url: https://frikortbifrost.nav.no
+    description: Produksjon
+  - url: https://frikortbifrost.ekstern.dev.nav.no
+    description: Test
+
+tags:
+  - name: Egenandelsfritak
+    description: Oppslag av egenandelsfritak for en borger
+  - name: Kryptering
+    description: Nøkler for kryptering av request
+
+paths:
+
+  /api/frikortsporring/helseid/v1:
+    post:
+      tags:
+        - Egenandelsfritak
+      summary: Oppslag av egenandelsfritak (HelseId-token med DPoP)
+      operationId: hentEgenandelsfritakstatusMedHelseIdtoken
+      description: |
+        Tjenesten mottar borgers ident (FNR eller DNR), tjenestetypekode og tjenestedato, og svarer 
+        med et true/false-svar på om borgeren er fritatt fra egenandel. Fritak gjelder hvis borgeren er 
+        innvilget frikort for det kalenderåret tjenestedatoen faller i. For tjenester levert av 
+        apotek eller bandasjist gjelder i tillegg at minstepensjonister er fritatt på lik linje 
+        med frikortinnehavere.
+      security:
+        - HelseIdDpop: []
+      parameters:
+        - $ref: '#/components/parameters/CorrelationId'
+        - in: header
+          name: DPoP
+          required: true
+          schema:
+            type: string
+          description: |
+            DPoP-bevis (Demonstrating Proof of Possession) i henhold til RFC 9449.
+            Må være bundet til gjeldende request-URI og HTTP-metode.
+          example: "eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2IiwiandrIjp7..."
+      requestBody:
+        required: true
+        description: JWE-kryptert JSON-payload (se `EgenandelsfritakstatusRequest` for innhold)
+        content:
+          application/jose:
+            schema:
+              $ref: '#/components/schemas/JweCompactSerialization'
+            example: "eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIn0...."
+      responses:
+        '200':
+          description: Vellykket oppslag
+          headers:
+            Correlation-Id:
+              $ref: '#/components/headers/CorrelationId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EgenandelsfritakstatusResponse'
+        '400':
+          description: Ugyldig request
+          headers:
+            Correlation-Id:
+              $ref: '#/components/headers/CorrelationId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeilResponse'
+              examples:
+                ugyldigJwe:
+                  summary: Ugyldig JWE
+                  value:
+                    correlationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                    feilkode: "UGYLDIG_REQUEST"
+                    melding: "Request-body er ikke gyldig JWE Compact Serialization"
+                    timestamp: "1716283200000"
+                ugyldigDPoP:
+                  summary: Ugyldig DPoP-bevis
+                  value:
+                    correlationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                    feilkode: "UGYLDIG_REQUEST"
+                    melding: "DPoP-bevis er ugyldig eller mangler"
+                    timestamp: "1716283200000"
+                ugyldigPayload:
+                  summary: Ugyldig JSON i dekryptert payload
+                  value:
+                    correlationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                    feilkode: "UGYLDIG_REQUEST"
+                    melding: "Dekryptert payload er ikke gyldig JSON"
+                    timestamp: "1716283200000"
+                valideringsfeil:
+                  summary: Valideringsfeil i payload
+                  value:
+                    correlationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                    feilkode: "UGYLDIG_REQUEST"
+                    melding: "Valideringsfeil: 'tjenestetypeKode' er ikke en gyldig kode"
+                    timestamp: "1716283200000"
+        '401':
+          description: Autentisering feilet
+          headers:
+            Correlation-Id:
+              $ref: '#/components/headers/CorrelationId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeilResponse'
+              example:
+                correlationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                feilkode: "AUTENTISERING_FEILET"
+                melding: "JWT-token er ugyldig eller utløpt"
+                timestamp: "1716283200000"
+        '403':
+          description: Konsument har ikke tilgang
+          headers:
+            Correlation-Id:
+              $ref: '#/components/headers/CorrelationId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeilResponse'
+              example:
+                correlationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                feilkode: "INGEN_TILGANG"
+                melding: "Konsument har ikke en aktiv avtale med Helfo som gir tilgang til dette APIet"
+                timestamp: "1716283200000"
+        '429':
+          description: For mange forespørsler
+          headers:
+            Correlation-Id:
+              $ref: '#/components/headers/CorrelationId'
+            Retry-After:
+              description: Antall sekunder konsumenten bør vente før neste forsøk
+              schema:
+                type: integer
+              example: 5
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeilResponse'
+              example:
+                correlationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                feilkode: "FOR_MANGE_FORESPORSLER"
+                melding: "For mange forespørsler. Prøv igjen senere"
+                timestamp: "1716283200000"
+        '500':
+          description: Intern feil
+          headers:
+            Correlation-Id:
+              $ref: '#/components/headers/CorrelationId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeilResponse'
+              example:
+                correlationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                feilkode: "INTERN_FEIL"
+                melding: "En uventet feil oppstod. Oppgi correlationId ved support-henvendelse"
+                timestamp: "1716283200000"
+
+  /api/frikortsporring/helseid/v1/klientstatus:
+    post:
+      tags:
+        - Egenandelsfritak
+      summary: Verifiser klientintegrasjon (statussjekk)
+      operationId: sjekkKlientstatus
+      description: |
+        Endepunkt som lar konsumenter verifisere at integrasjonen er korrekt satt opp,
+        uten å gjøre oppslag på ekte borgere.
+
+        Endepunktet validerer hele kjeden — autentisering, kryptering og avtaleforhold — og
+        returnerer status for hver enkelt sjekk.
+
+        Autentisering (DPoP-token, scope osv.) valideres først. Ved autentiseringsfeil returneres
+        standard feilrespons (400/401/403) med en beskrivende feilmelding. Først når autentisering
+        er OK, sjekkes kryptering og avtaleforhold.
+      security:
+        - HelseIdDpop: []
+      parameters:
+        - $ref: '#/components/parameters/CorrelationId'
+        - in: header
+          name: DPoP
+          required: true
+          schema:
+            type: string
+          description: |
+            DPoP-bevis (Demonstrating Proof of Possession) i henhold til RFC 9449.
+            Må være bundet til gjeldende request-URI og HTTP-metode.
+          example: "eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2IiwiandrIjp7..."
+      requestBody:
+        required: true
+        description: |
+          JWE-kryptert payload. Innholdet i den dekrypterte payloaden er ikke relevant for
+          statussjekken — det er selve JWE-strukturen som valideres. Payloaden kan derfor
+          inneholde vilkårlig innhold, så lenge den er gyldig JWE kryptert med riktig nøkkel.
+        content:
+          application/jose:
+            schema:
+              $ref: '#/components/schemas/JweCompactSerialization'
+            example: "eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIn0...."
+      responses:
+        '200':
+          description: |
+            Autentisering er OK. Se response body for resultat av kryptering og avtalesjekk.
+          headers:
+            Correlation-Id:
+              $ref: '#/components/headers/CorrelationId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+              examples:
+                altOk:
+                  summary: Alt OK
+                  value:
+                    overordnetStatus: "OK"
+                    autentisering:
+                      status: "OK"
+                      beskrivelse: "DPoP-token er gyldig"
+                    kryptering:
+                      status: "OK"
+                      beskrivelse: "JWE-dekryptering vellykket"
+                    helfoAvtale:
+                      status: "OK"
+                      beskrivelse: "Aktiv avtale funnet"
+                krypteringFeil:
+                  summary: Kryptering feiler
+                  value:
+                    overordnetStatus: "FEIL"
+                    autentisering:
+                      status: "OK"
+                      beskrivelse: "DPoP-token er gyldig"
+                    kryptering:
+                      status: "FEIL"
+                      beskrivelse: "JWE-dekryptering feilet: ugyldig nøkkel"
+                    helfoAvtale:
+                      status: "IKKE_IMPLEMENTERT"
+                      beskrivelse: "Avtalevalidering er ikke implementert ennå"
+        '400':
+          description: Ugyldig request (f.eks. ugyldig DPoP-bevis)
+          headers:
+            Correlation-Id:
+              $ref: '#/components/headers/CorrelationId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeilResponse'
+              example:
+                correlationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                feilkode: "UGYLDIG_REQUEST"
+                melding: "DPoP-bevis er ugyldig eller mangler"
+                timestamp: "1716283200000"
+        '401':
+          description: Autentisering feilet
+          headers:
+            Correlation-Id:
+              $ref: '#/components/headers/CorrelationId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeilResponse'
+              example:
+                correlationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                feilkode: "AUTENTISERING_FEILET"
+                melding: "JWT-token er ugyldig eller utløpt"
+                timestamp: "1716283200000"
+        '403':
+          description: Konsument har ikke tilgang
+          headers:
+            Correlation-Id:
+              $ref: '#/components/headers/CorrelationId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeilResponse'
+              example:
+                correlationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                feilkode: "INGEN_TILGANG"
+                melding: "Konsument har ikke en aktiv avtale med Helfo som gir tilgang til dette APIet"
+                timestamp: "1716283200000"
+        '429':
+          description: For mange forespørsler
+          headers:
+            Correlation-Id:
+              $ref: '#/components/headers/CorrelationId'
+            Retry-After:
+              description: Antall sekunder konsumenten bør vente før neste forsøk
+              schema:
+                type: integer
+              example: 5
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeilResponse'
+              example:
+                correlationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                feilkode: "FOR_MANGE_FORESPORSLER"
+                melding: "For mange forespørsler. Prøv igjen senere"
+                timestamp: "1716283200000"
+        '500':
+          description: Intern feil
+          headers:
+            Correlation-Id:
+              $ref: '#/components/headers/CorrelationId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeilResponse'
+              example:
+                correlationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                feilkode: "INTERN_FEIL"
+                melding: "En uventet feil oppstod. Oppgi correlationId ved support-henvendelse"
+                timestamp: "1716283200000"
+
+  /api/frikortsporring/jwks:
+    get:
+      tags:
+        - Kryptering
+      summary: Hent offentlig JWK for kryptering av request
+      operationId: hentJwks
+      description: |
+        Returnerer det offentlige JWK-settet som konsumenten skal bruke til å kryptere
+        request-payloaden med JWE. Nøklene roteres jevnlig; konsumenten bør alltid hente
+        gjeldende nøkkel fra dette endepunktet og ikke cache den over lengre tid.
+      responses:
+        '200':
+          description: JWK-sett med offentlig(e) krypteringsnøkkel(er)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwkSet'
+              example:
+                keys:
+                  - kty: RSA
+                    use: enc
+                    alg: RSA-OAEP-256
+                    kid: "frikortbifrost-enc-20260312-1"
+                    n: "sEe2Z3Xv..."
+                    e: "AQAB"
+                    exp: 1776939606
+
+
+components:
+  schemas:
+
+    JweCompactSerialization:
+      type: string
+      description: |
+        JWE Compact Serialization-streng som inneholder en kryptert `EgenandelsfritakstatusRequest`.
+        Format: `BASE64URL(JWE Protected Header).BASE64URL(JWE Encrypted Key).BASE64URL(JWE Initialization Vector).BASE64URL(JWE Ciphertext).BASE64URL(JWE Authentication Tag)`
+      pattern: '^[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]*\.[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+$'
+
+    EgenandelsfritakstatusRequest:
+      type: object
+      description: |
+        Payload for oppslag av egenandelsfritakstatus. Denne modellen beskriver klartekst-innholdet
+        i den krypterte JWE-payloaden som sendes i request body. Selve requesten sendes som en
+        JWE Compact Serialization-streng (se `JweCompactSerialization`), men den dekrypterte
+        payloaden skal følge dette skjemaet.
+      required:
+        - borgerIdent
+        - tjenestetypeKode
+        - tjenestedato
+      properties:
+        borgerIdent:
+          type: string
+          description: |
+            Fødselsnummer (11 siffer) eller D-nummer (11 siffer) for borgeren det gjøres
+            oppslag for.
+          pattern: '^\d{11}$'
+          examples:
+            - "12345678901"
+        tjenestetypeKode:
+          $ref: '#/components/schemas/TjenestetypeKode'
+        tjenestedato:
+          type: string
+          format: date
+          description: |
+            Dato for behandlingen eller utleveringen det gjøres oppslag for (ISO 8601, YYYY-MM-DD). 
+            Fritaksstatus vurderes for denne datoen.
+          examples:
+            - "2026-06-15"
+      examples:
+        - borgerIdent: "12345678901"
+          tjenestetypeKode: "LE"
+          tjenestedato: "2026-06-15"
+
+    TjenestetypeKode:
+      type: string
+      description: |
+        Kode for hvilken tjenestetype oppslaget gjelder.
+
+        **Utlevering på blå resept** (apotek og bandasjister):
+        - `A` – Apotek
+        - `S` – Sykehusapotek
+        - `B` – Bandasjist
+
+        **Behandling**:
+        - `LE` – Lege
+        - `HS` – Helsestasjon
+        - `PO` – Poliklinikk
+        - `LR` – Lab/røntgen
+        - `PS` – Psykolog
+        - `PR` – Pasientreiser
+        - `BR` – Behandlingsreiser
+        - `TB` – Tannbehandling
+        - `RH` – Rehabilitering
+        - `FT` – Fysioterapi
+      enum:
+        - A
+        - S
+        - B
+        - LE
+        - HS
+        - PO
+        - LR
+        - PS
+        - PR
+        - BR
+        - TB
+        - RH
+        - FT
+
+    EgenandelsfritakstatusResponse:
+      type: object
+      description: Resultat av oppslag av egenandelsfritakstatus
+      required:
+        - harEgenandelsfritak
+      properties:
+        harEgenandelsfritak:
+          type: boolean
+          description: |
+            `true` hvis borgeren er fritatt fra å betale egenandel for den angitte tjenesten
+            på den angitte datoen, basert på frikort eller minstepensjonist-status etter
+            blåreseptregelverket. `false` hvis fritak ikke er registrert.
+
+            Merk: Et positivt svar (`true`) er én av flere mulige årsaker til at en borger
+            ikke skal betale egenandel. Konsumenten er ansvarlig for å vurdere øvrige
+            fritaksårsaker i sin sammenheng.
+          examples:
+            - true
+      examples:
+        - harEgenandelsfritak: true
+
+    StatusResponse:
+      type: object
+      description: |
+        Resultat av klientstatus-sjekk. Inneholder overordnet status og detaljert
+        resultat for hver enkelt sjekk (autentisering, kryptering, avtaleforhold).
+      required:
+        - overordnetStatus
+        - autentisering
+        - kryptering
+        - helfoAvtale
+      properties:
+        overordnetStatus:
+          type: string
+          description: |
+            Samlet status for alle sjekker.
+            `OK` hvis alle sjekker er OK eller IKKE_IMPLEMENTERT.
+            `FEIL` hvis én eller flere sjekker feiler.
+          enum:
+            - OK
+            - FEIL
+        autentisering:
+          $ref: '#/components/schemas/Sjekk'
+        kryptering:
+          $ref: '#/components/schemas/Sjekk'
+        helfoAvtale:
+          $ref: '#/components/schemas/Sjekk'
+
+    Sjekk:
+      type: object
+      description: Resultat av én enkelt statussjekk
+      required:
+        - status
+        - beskrivelse
+      properties:
+        status:
+          type: string
+          description: |
+            Resultat av sjekken.
+            - `OK` – Sjekken ble utført og bestått.
+            - `FEIL` – Sjekken ble utført, men feilet.
+            - `IKKE_IMPLEMENTERT` – Sjekken er ikke implementert ennå.
+          enum:
+            - OK
+            - FEIL
+            - IKKE_IMPLEMENTERT
+        beskrivelse:
+          type: string
+          description: Beskrivelse av resultatet
+
+    FeilResponse:
+      type: object
+      description: Feilrespons fra APIet
+      required:
+        - correlationId
+        - feilkode
+        - melding
+        - timestamp
+      properties:
+        correlationId:
+          type: string
+          format: uuid
+          description: |
+            Unik ID for dette kallet. Brukes til feilsøking og logging.
+            Oppgi denne ved support-henvendelse.
+          examples:
+            - "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        feilkode:
+          $ref: '#/components/schemas/Feilkode'
+        melding:
+          type: string
+          description: Menneskelig lesbar feilmelding (ikke egnet for maskinell tolkning)
+          examples:
+            - "JWT-token er ugyldig eller utløpt"
+        timestamp:
+          type: string
+          description: Tidspunkt for feilen (Unix millisekunder siden epoch)
+          examples:
+            - "1716283200000"
+
+    Feilkode:
+      type: string
+      description: |
+        Maskinlesbar kode som identifiserer feiltypen.
+
+        - `UGYLDIG_REQUEST` – Request er teknisk ugyldig (ugyldig JWE, ugyldig JSON, valideringsfeil i payload, ugyldig DPoP-bevis)
+        - `AUTENTISERING_FEILET` – JWT-token er ugyldig, utløpt eller ikke tillitskontrollert
+        - `INGEN_TILGANG` – Konsument mangler aktiv avtale eller nødvendige rettigheter
+        - `FOR_MANGE_FORESPORSLER` – Konsument har sendt for mange forespørsler i et gitt tidsrom
+        - `INTERN_FEIL` – Uventet feil på serversiden (driftsfeil eller bug)
+      enum:
+        - UGYLDIG_REQUEST
+        - AUTENTISERING_FEILET
+        - INGEN_TILGANG
+        - FOR_MANGE_FORESPORSLER
+        - INTERN_FEIL
+
+    JwkSet:
+      type: object
+      description: JSON Web Key Set (JWKS) med offentlig(e) krypteringsnøkkel(er)
+      required:
+        - keys
+      properties:
+        keys:
+          type: array
+          items:
+            $ref: '#/components/schemas/Jwk'
+
+    Jwk:
+      type: object
+      description: JSON Web Key (offentlig RSA-nøkkel for kryptering)
+      required:
+        - kty
+        - use
+        - alg
+        - kid
+        - n
+        - e
+      properties:
+        kty:
+          type: string
+          description: Nøkkeltype
+          examples:
+            - "RSA"
+        use:
+          type: string
+          description: Tiltenkt bruk (`enc` for kryptering)
+          examples:
+            - "enc"
+        alg:
+          type: string
+          description: Algoritme
+          examples:
+            - "RSA-OAEP-256"
+        kid:
+          type: string
+          description: Nøkkel-ID
+          examples:
+            - "frikortbifrost-enc-20260312-1"
+        n:
+          type: string
+          description: RSA modulus (Base64url-kodet)
+          examples:
+            - "sEe2Z3Xv..."
+        e:
+          type: string
+          description: RSA eksponent (Base64url-kodet)
+          examples:
+            - "AQAB"
+        exp:
+          type: integer
+          format: int64
+          description: Utløpstidspunkt for nøkkelen (Unix timestamp, sekunder siden epoch). Konsumenten bør hente ny nøkkel etter dette tidspunktet.
+          examples:
+            - 1776939606
+
+  securitySchemes:
+    HelseIdDpop:
+      type: http
+      scheme: DPoP
+      description: |
+        JWT-token utstedt av HelseId med DPoP-binding. Sendes som `Authorization: DPoP <token>`.
+        DPoP-beviset sendes i tillegg i `DPoP`-headeren.
+
+  parameters:
+    CorrelationId:
+      in: header
+      name: Correlation-Id
+      required: false
+      schema:
+        type: string
+        format: uuid
+      description: |
+        Valgfri korrelasjons-ID for sporing av requesten.
+        Hvis ikke angitt, genererer APIet en ny ID.
+        Returneres alltid i `Correlation-Id`-headeren i responsen.
+      example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+
+  headers:
+    CorrelationId:
+      description: |
+        Unik ID for dette kallet. Brukes til feilsøking og logging.
+        Oppgi denne ved support-henvendelse.
+      schema:
+        type: string
+        format: uuid
+      example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"

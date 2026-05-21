@@ -1,5 +1,8 @@
 # Frikortoppslag API
 
+!!! warning "Kun tilgjengelig i testmiljø"
+    API-et er foreløpig kun tilgjengelig i testmiljøet. Kall mot produksjonsmiljøet vil feile.
+
 Frikortløsningen tilbyr API-baserte tjenester for samhandling med behandlere, apotek og andre aktører i helsesektoren som har avtale med Helfo om direkte oppgjør.
 
 ## Tjenesten
@@ -76,11 +79,9 @@ Dersom ingen av identifikatorene gir treff i avtaleregisteret, vil API-et return
 ## OpenAPI-spesifikasjon
 
 Swagger for OpenAPI: [SWAGGER - FRIKORTSPORRING-API](https://frikortbifrost-q2.ekstern.dev.nav.no/swagger-ui/index.html)
-NB: Denne er test-miljø per nå.
 
 En fullstendig OpenAPI 3.1-spesifikasjon for API-et er tilgjengelig:
-[frikortsporring-api.yaml](https://github.com/navikt/frikort-bifrost/blob/main/src/main/resources/openapi/frikortsporring-api.yaml)
-NB: Ikke åpen utenfor NAV. 
+[frikortsporring-api.yaml](frikortsporring-api.yaml)
 
 ---
 
