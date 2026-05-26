@@ -78,7 +78,7 @@ Dersom ingen av identifikatorene gir treff i avtaleregisteret, vil API-et return
 
 ## OpenAPI-spesifikasjon
 
-Swagger for OpenAPI: [SWAGGER - FRIKORTSPORRING-API](https://frikortbifrost-q2.ekstern.dev.nav.no/swagger-ui/index.html)
+Swagger for OpenAPI: [SWAGGER - FRIKORTSPORRING-API](https://frikortbifrost.ekstern.dev.nav.no/swagger-ui/index.html)
 
 En fullstendig OpenAPI 3.1-spesifikasjon for API-et er tilgjengelig:
 [frikortsporring-api.yaml](frikortsporring-api.yaml)
