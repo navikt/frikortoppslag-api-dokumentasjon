@@ -39,7 +39,7 @@
     Nei. API-et tilbyr kun enkeltoppslag. Dersom du tidligere har brukt mengdespørring, må hvert oppslag nå gjøres som separate kall mot API-et.
 
 ??? question "Kan jeg slå opp historisk frikortstatus?"
-    Ja, du kan angi en vilkårlig `tjenestedato` i requesten, men maks 2 år tilbake i tid. For tidligere år sjekkes frikortstatus per 31.12 det aktuelle året.
+    Ja, du kan angi en vilkårlig `tjenestedato` i requesten, men maks 2 år tilbake i tid. 
 
 ??? question "Hvilke tjenestetyper støttes?"
     Se [kodeverket](kodeverk.md) for en oversikt over gyldige tjenestetypekoder.
