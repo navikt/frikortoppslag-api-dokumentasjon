@@ -13,7 +13,7 @@
 
 ## Kryptering
 
-??? question "Hvorfor må requesten krypteres når den ikke inneholder sensitive opplysninger?"
+??? question "Hvorfor må requesten krypteres?"
     Selv om request-payloaden i seg selv kan virke uskyldig, avslører den at en borger har mottatt en bestemt helsetjeneste på en gitt dato. Dette regnes som sensitive personopplysninger. Helsedirektoratets policy krever ende-til-ende-kryptering av slike data i offentlig sky.
 
 ??? question "Trenger jeg et eget sertifikat for å signere requesten?"
