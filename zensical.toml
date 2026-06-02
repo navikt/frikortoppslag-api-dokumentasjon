@@ -16,6 +16,7 @@ nav = [
         { "Kodeverk" = "generelt/kodeverk.md" },
         { "Begrepsliste" = "generelt/begrepsliste.md" },
         { "JSON-konvensjoner" = "generelt/json_konvensjoner.md" },
+        { "FAQ" = "generelt/faq.md" },
         { "Endringslogg" = "generelt/endringslogg.md" },
     ] },
 ]

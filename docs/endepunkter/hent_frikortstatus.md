@@ -32,7 +32,11 @@ Fritak gjelder hvis borgeren har innvilget frikort for det kalenderåret tjenest
 
 ### Request body
 
-Request-body sendes som en JWE-kryptert streng. Se [JWE-kryptering](../kryptering_av_request.md) for detaljer om kryptering. 
+Request-body sendes som en JWE-kryptert streng. Kryptering er påkrevd fordi request-innholdet avslører at en borger har
+mottatt en bestemt type helsetjeneste på en gitt dato, noe som utgjør sensitive personopplysninger. Helsedirektoratets
+policy krever ende-til-ende-kryptering av sensitive data på offentlig sky. TLS alene er ikke tilstrekkelig da data
+ellers ender i klartekst ved TLS-terminering. Se [JWE-kryptering](../kryptering_av_request.md) for detaljer om kryptering. 
+
 Det dekrypterte innholdet i JWE-payloaden skal være følgende JSON:
 
 ```json
