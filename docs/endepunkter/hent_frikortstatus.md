@@ -193,3 +193,15 @@ Correlation-Id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
   "timestamp": "1716283200000"
 }
 ```
+
+## Testpersoner
+
+Vi har et sett med testpersoner som kan brukes i testmiljøet. Disse personene har ulike kombinasjoner av frikortstatus og reservasjon for å teste forskjellige scenarier.
+
+| Fødselsnummer | Egenandelsfritak | Beskrivelse                                                                                        |
+|---------------|------------------|----------------------------------------------------------------------------------------------------|
+| 05058705065   | Ja               | Har frikort for inneværende år.                                                                    |
+| 58116541813   | Ja               | Har frikort for inneværende år.                                                                    |
+| 20118690681   | Nei              | Har ikke frikort.                                                                                  |
+| 52077995919   | Nei              | Har ikke frikort.                                                                                  |
+| 25909799913   | Ja (Blåresept)   | Har ikke frikort, men har status som minstepensjonist. Vil returnere true på tjenestetype A, B, S. |

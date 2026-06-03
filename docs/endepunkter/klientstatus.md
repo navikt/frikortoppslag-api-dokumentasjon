@@ -71,12 +71,12 @@ Responsen returneres som ukryptert JSON med `Content-Type: application/json`.
 
 ### Felter i response
 
-| Felt              | Type   | Beskrivelse                                                                |
-|-------------------|--------|----------------------------------------------------------------------------|
-| `overordnetStatus`| String | Samlet status for alle sjekker. `OK` hvis alle sjekker er OK eller IKKE_IMPLEMENTERT. `FEIL` hvis én eller flere sjekker feiler. |
+| Felt              | Type   | Beskrivelse                                                                                                                                                   |
+|-------------------|--------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `overordnetStatus`| String | Samlet status for alle sjekker. `OK` hvis alle sjekker er OK eller IKKE_IMPLEMENTERT. `FEIL` hvis én eller flere sjekker feiler.                              |
 | `autentisering`   | Sjekk  | Resultat av DPoP-autentiseringssjekken. Vil alltid være `OK` i 200-responsen, ettersom autentiseringsfeil gir en feilrespons (401/400) før denne sjekken nås. |
-| `kryptering`      | Sjekk  | Resultat av JWE-dekrypteringssjekken.                                      |
-| `helfoAvtale`      | Sjekk  | Resultat av avtalesjekk mot Helsedirektoratets register. Se [Kontroll av avtaleforhold](../index.md#kontroll-av-avtaleforhold). |
+| `kryptering`      | Sjekk  | Resultat av JWE-dekrypteringssjekken.                                                                                                                         |
+| `helfoAvtale`      | Sjekk  | Resultat av avtalesjekk mot Helfos register. Se [Kontroll av avtaleforhold](../index.md#kontroll-av-avtaleforhold).                                           |
 
 ### Sjekk-objekt
 

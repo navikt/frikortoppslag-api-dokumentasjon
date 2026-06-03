@@ -64,7 +64,7 @@ Mer informasjon om HelseID og oppsett:
 !!! warning "Kommende funksjonalitet"
     Avtalevalidering er under utvikling og er ikke implementert ennå. Dokumentasjonen beskriver planlagt oppførsel.
 
-I tillegg til autentisering via HelseID, vil API-et kontrollere at den som gjør oppslaget har en aktiv avtale med Helsedirektoratet. Denne kontrollen gjøres mot Helsedirektoratets register over avtaleforhold, og utføres **før** noe svar returneres.
+I tillegg til autentisering via HelseID, vil API-et kontrollere at den som gjør oppslaget har en aktiv avtale med Helfo. Denne kontrollen gjøres mot Helfos register over avtaleforhold, og utføres **før** noe svar returneres.
 
 Registeret sjekkes i følgende rekkefølge, basert på informasjonen i claims fra HelseID-tokenet:
 
