@@ -21,6 +21,8 @@ Endepunkt for å hente de offentlige nøklene som brukes til å kryptere request
 | Statuskode | Beskrivelse                               |
 |------------|-------------------------------------------|
 | `200 OK`   | JWK-sett returnert.                       |
+| `404 Not Found` | Ukjent API-path.                      |
+| `405 Method Not Allowed` | HTTP-metode er ikke tillatt for dette endepunktet. |
 
 ### Response body (200 OK)
 
@@ -53,6 +55,12 @@ Responsen er et **JSON Web Key Set (JWKS)** med én offentlig RSA-nøkkel — n�
 | `n`   | String | RSA modulus (Base64url-kodet).                         |
 | `e`   | String | RSA eksponent (Base64url-kodet).                       |
 | `exp` | Number | Utløpstidspunkt for nøkkelen (Unix timestamp i sekunder). |
+
+### Response headers
+
+| Header  | Beskrivelse                                                        |
+|---------|--------------------------------------------------------------------|
+| `Allow` | Kun ved 405 — HTTP-metodene som er tillatt for dette endepunktet.  |
 
 ---
 

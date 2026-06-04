@@ -64,12 +64,13 @@ Det dekrypterte innholdet i JWE-payloaden skal være følgende JSON:
 | Statuskode                  | Beskrivelse                                                                       |
 |-----------------------------|-----------------------------------------------------------------------------------|
 | `200 OK`                    | Oppslaget var vellykket. Se response body.                                        |
-| `400 Bad Request`           | Ugyldig request (ugyldig JWE, ugyldig JSON, valideringsfeil, ugyldig DPoP-bevis). |
+| `400 Bad Request`           | Ugyldig request (ugyldig JWE, ugyldig JSON, valideringsfeil).                     |
 | `401 Unauthorized`          | Autentisering feilet — token er ugyldig eller utløpt.                             |
 | `403 Forbidden`             | Konsumenten har ikke en aktiv avtale med Helfo som gir tilgang. Se [Kontroll av avtaleforhold](../index.md#kontroll-av-avtaleforhold). |
+| `404 Not Found`             | Ukjent API-path.                                                                  |
+| `405 Method Not Allowed`    | HTTP-metode er ikke tillatt for dette endepunktet.                                |
 | `429 Too Many Requests`     | For mange forespørsler sendt på kort tid. Vent i henhold til `Retry-After`.      |
 | `500 Internal Server Error` | Uventet feil på serversiden.                                                      |
-| `501 Not Implemented`       | Ikke ferdig implementert, brukes under testing.                                   |
 
 ### Response body (200 OK)
 
@@ -92,6 +93,7 @@ Responsen returneres som ukryptert JSON med `Content-Type: application/json`.
 |------------------|--------------------------------------------------------------------|
 | `Correlation-Id` | Unik ID for kallet. Oppgi denne ved support-henvendelse.           |
 | `Retry-After`    | Kun ved 429 — antall sekunder å vente før neste forsøk.            |
+| `Allow`          | Kun ved 405 — HTTP-metodene som er tillatt for dette endepunktet.  |
 
 ### Feilresponser
 
@@ -117,9 +119,11 @@ Ved feil (4xx/5xx) returneres en JSON-body med følgende struktur:
 
 | Feilkode                  | HTTP-status | Beskrivelse                                                                                |
 |---------------------------|-------------|--------------------------------------------------------------------------------------------|
-| `UGYLDIG_REQUEST`         | 400         | Ugyldig JWE, ugyldig JSON i dekryptert payload, valideringsfeil, eller ugyldig DPoP-bevis. |
+| `UGYLDIG_REQUEST`         | 400         | Ugyldig JWE, ugyldig JSON i dekryptert payload, eller valideringsfeil.                     |
 | `AUTENTISERING_FEILET`    | 401         | JWT-token er ugyldig, utløpt eller ikke tillitskontrollert.                                |
 | `INGEN_TILGANG`           | 403         | Konsumenten mangler aktiv avtale eller nødvendige rettigheter.                             |
+| `IKKE_FUNNET`             | 404         | Ukjent API-path.                                                                          |
+| `METODE_IKKE_TILLATT`     | 405         | HTTP-metode er ikke tillatt for dette endepunktet.                                         |
 | `FOR_MANGE_FORESPORSLER`  | 429         | Konsumenten har sendt for mange forespørsler i et gitt tidsrom.                            |
 | `INTERN_FEIL`             | 500         | Uventet feil på serversiden. Oppgi `correlationId` ved support-henvendelse.                |
 
