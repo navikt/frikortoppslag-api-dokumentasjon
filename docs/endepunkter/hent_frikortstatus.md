@@ -196,12 +196,12 @@ Correlation-Id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
 
 ## Testpersoner
 
-Vi har et sett med testpersoner som kan brukes i testmiljøet. Disse personene har ulike kombinasjoner av frikortstatus og reservasjon for å teste forskjellige scenarier.
+Vi har et sett med testpersoner som kan brukes i testmiljøet. Disse personene har ulike kombinasjoner av fritaksstatus og identtype (FNR/DNR) for å teste forskjellige scenarier.
 
-| Fødselsnummer | Egenandelsfritak | Beskrivelse                                                                                        |
-|---------------|------------------|----------------------------------------------------------------------------------------------------|
-| Kommer snart  | Ja               | Har frikort for inneværende år.                                                                    |
-| Kommer snart  | Ja               | Har frikort for inneværende år.                                                                    |
-| Kommer snart  | Nei              | Har ikke frikort.                                                                                  |
-| Kommer snart  | Nei              | Har ikke frikort.                                                                                  |
-| Kommer snart  | Ja (Blåresept)   | Har ikke frikort, men har status som minstepensjonist. Vil returnere true på tjenestetype A, B, S. |
+| Borgerident | Egenandelsfritak | Beskrivelse                                                                                        |
+|-------------|------------------|----------------------------------------------------------------------------------------------------|
+| 19929802260 | Ja               | Har frikort for inneværende år.                                                                    |
+| 55848850062 | Ja               | Har frikort for inneværende år.                                                                    |
+| 27848539029 | Nei              | Har ikke frikort.                                                                                  |
+| 55819510007 | Nei              | Har ikke frikort.                                                                                  |
+| 25909799913 | Ja (Blåresept)   | Har ikke frikort, men har status som minstepensjonist. Vil returnere true på tjenestetype A, B, S. |
