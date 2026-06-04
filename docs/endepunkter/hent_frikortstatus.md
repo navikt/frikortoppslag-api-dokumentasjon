@@ -200,8 +200,8 @@ Vi har et sett med testpersoner som kan brukes i testmiljøet. Disse personene h
 
 | Fødselsnummer | Egenandelsfritak | Beskrivelse                                                                                        |
 |---------------|------------------|----------------------------------------------------------------------------------------------------|
-| 05058705065   | Ja               | Har frikort for inneværende år.                                                                    |
-| 58116541813   | Ja               | Har frikort for inneværende år.                                                                    |
-| 20118690681   | Nei              | Har ikke frikort.                                                                                  |
-| 52077995919   | Nei              | Har ikke frikort.                                                                                  |
-| 25909799913   | Ja (Blåresept)   | Har ikke frikort, men har status som minstepensjonist. Vil returnere true på tjenestetype A, B, S. |
+| Kommer snart  | Ja               | Har frikort for inneværende år.                                                                    |
+| Kommer snart  | Ja               | Har frikort for inneværende år.                                                                    |
+| Kommer snart  | Nei              | Har ikke frikort.                                                                                  |
+| Kommer snart  | Nei              | Har ikke frikort.                                                                                  |
+| Kommer snart  | Ja (Blåresept)   | Har ikke frikort, men har status som minstepensjonist. Vil returnere true på tjenestetype A, B, S. |
