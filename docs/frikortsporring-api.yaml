@@ -134,13 +134,6 @@ paths:
                     feilkode: "UGYLDIG_REQUEST"
                     melding: "Request-body er ikke gyldig JWE Compact Serialization"
                     timestamp: "1716283200000"
-                ugyldigDPoP:
-                  summary: Ugyldig DPoP-bevis
-                  value:
-                    correlationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-                    feilkode: "UGYLDIG_REQUEST"
-                    melding: "DPoP-bevis er ugyldig eller mangler"
-                    timestamp: "1716283200000"
                 ugyldigPayload:
                   summary: Ugyldig JSON i dekryptert payload
                   value:
@@ -182,6 +175,39 @@ paths:
                 correlationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
                 feilkode: "INGEN_TILGANG"
                 melding: "Konsument har ikke en aktiv avtale med Helfo som gir tilgang til dette APIet"
+                timestamp: "1716283200000"
+        '404':
+          description: Ukjent API-path
+          headers:
+            Correlation-Id:
+              $ref: '#/components/headers/CorrelationId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeilResponse'
+              example:
+                correlationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                feilkode: "IKKE_FUNNET"
+                melding: "Ukjent API-path"
+                timestamp: "1716283200000"
+        '405':
+          description: Metode ikke tillatt
+          headers:
+            Correlation-Id:
+              $ref: '#/components/headers/CorrelationId'
+            Allow:
+              description: HTTP-metodene som er tillatt for dette endepunktet
+              schema:
+                type: string
+              example: POST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeilResponse'
+              example:
+                correlationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                feilkode: "METODE_IKKE_TILLATT"
+                melding: "Metode er ikke tillatt for dette endepunktet"
                 timestamp: "1716283200000"
         '429':
           description: For mange forespørsler
@@ -296,7 +322,7 @@ paths:
                       status: "IKKE_IMPLEMENTERT"
                       beskrivelse: "Avtalevalidering er ikke implementert ennå"
         '400':
-          description: Ugyldig request (f.eks. ugyldig DPoP-bevis)
+          description: Ugyldig request
           headers:
             Correlation-Id:
               $ref: '#/components/headers/CorrelationId'
@@ -307,7 +333,7 @@ paths:
               example:
                 correlationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
                 feilkode: "UGYLDIG_REQUEST"
-                melding: "DPoP-bevis er ugyldig eller mangler"
+                melding: "Dekryptert payload er ikke gyldig JSON"
                 timestamp: "1716283200000"
         '401':
           description: Autentisering feilet
@@ -336,6 +362,39 @@ paths:
                 correlationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
                 feilkode: "INGEN_TILGANG"
                 melding: "Konsument har ikke en aktiv avtale med Helfo som gir tilgang til dette APIet"
+                timestamp: "1716283200000"
+        '404':
+          description: Ukjent API-path
+          headers:
+            Correlation-Id:
+              $ref: '#/components/headers/CorrelationId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeilResponse'
+              example:
+                correlationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                feilkode: "IKKE_FUNNET"
+                melding: "Ukjent API-path"
+                timestamp: "1716283200000"
+        '405':
+          description: Metode ikke tillatt
+          headers:
+            Correlation-Id:
+              $ref: '#/components/headers/CorrelationId'
+            Allow:
+              description: HTTP-metodene som er tillatt for dette endepunktet
+              schema:
+                type: string
+              example: POST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeilResponse'
+              example:
+                correlationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                feilkode: "METODE_IKKE_TILLATT"
+                melding: "Metode er ikke tillatt for dette endepunktet"
                 timestamp: "1716283200000"
         '429':
           description: For mange forespørsler
@@ -397,6 +456,39 @@ paths:
                     n: "sEe2Z3Xv..."
                     e: "AQAB"
                     exp: 1776939606
+        '404':
+          description: Ukjent API-path
+          headers:
+            Correlation-Id:
+              $ref: '#/components/headers/CorrelationId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeilResponse'
+              example:
+                correlationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                feilkode: "IKKE_FUNNET"
+                melding: "Ukjent API-path"
+                timestamp: "1716283200000"
+        '405':
+          description: Metode ikke tillatt
+          headers:
+            Correlation-Id:
+              $ref: '#/components/headers/CorrelationId'
+            Allow:
+              description: HTTP-metodene som er tillatt for dette endepunktet
+              schema:
+                type: string
+              example: GET
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeilResponse'
+              example:
+                correlationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                feilkode: "METODE_IKKE_TILLATT"
+                melding: "Metode er ikke tillatt for dette endepunktet"
+                timestamp: "1716283200000"
 
 
 components:
@@ -585,13 +677,17 @@ components:
       description: |
         Maskinlesbar kode som identifiserer feiltypen.
 
-        - `UGYLDIG_REQUEST` – Request er teknisk ugyldig (ugyldig JWE, ugyldig JSON, valideringsfeil i payload, ugyldig DPoP-bevis)
+        - `UGYLDIG_REQUEST` – Request er teknisk ugyldig (ugyldig JWE, ugyldig JSON, valideringsfeil i payload)
+        - `IKKE_FUNNET` – Endepunktet finnes ikke
+        - `METODE_IKKE_TILLATT` – HTTP-metoden er ikke tillatt for endepunktet
         - `AUTENTISERING_FEILET` – JWT-token er ugyldig, utløpt eller ikke tillitskontrollert
         - `INGEN_TILGANG` – Konsument mangler aktiv avtale eller nødvendige rettigheter
         - `FOR_MANGE_FORESPORSLER` – Konsument har sendt for mange forespørsler i et gitt tidsrom
         - `INTERN_FEIL` – Uventet feil på serversiden (driftsfeil eller bug)
       enum:
         - UGYLDIG_REQUEST
+        - IKKE_FUNNET
+        - METODE_IKKE_TILLATT
         - AUTENTISERING_FEILET
         - INGEN_TILGANG
         - FOR_MANGE_FORESPORSLER

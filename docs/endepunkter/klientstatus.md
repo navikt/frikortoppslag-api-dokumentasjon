@@ -42,8 +42,10 @@ Innholdet i den dekrypterte payloaden er ikke relevant for statussjekken — det
 | Statuskode                  | Beskrivelse                                               |
 |-----------------------------|-----------------------------------------------------------|
 | `200 OK`                    | Autentisering var vellykket. Se response body for resultat av øvrige sjekker. |
-| `400 Bad Request`           | Ugyldig request (ugyldig DPoP-bevis).                     |
+| `400 Bad Request`           | Ugyldig request.                                          |
 | `401 Unauthorized`          | Autentisering feilet — token er ugyldig eller utløpt.     |
+| `404 Not Found`             | Ukjent API-path.                                          |
+| `405 Method Not Allowed`    | HTTP-metode er ikke tillatt for dette endepunktet.        |
 | `429 Too Many Requests`     | For mange forespørsler sendt på kort tid.                 |
 | `500 Internal Server Error` | Uventet feil på serversiden.                              |
 
@@ -98,6 +100,7 @@ Responsen returneres som ukryptert JSON med `Content-Type: application/json`.
 | Header           | Beskrivelse                                                        |
 |------------------|--------------------------------------------------------------------|
 | `Correlation-Id` | Unik ID for kallet. Oppgi denne ved support-henvendelse.           |
+| `Allow`          | Kun ved 405 — HTTP-metodene som er tillatt for dette endepunktet.  |
 
 ### Feilresponser
 
