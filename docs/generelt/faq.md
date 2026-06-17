@@ -17,10 +17,10 @@
     Selv om request-payloaden i seg selv kan virke uskyldig, avslører den at en borger har mottatt en bestemt helsetjeneste på en gitt dato. Dette regnes som sensitive personopplysninger. Helsedirektoratets policy krever ende-til-ende-kryptering av slike data i offentlig sky.
 
 ??? question "Trenger jeg et eget sertifikat for å signere requesten?"
-    Nei. API-et bruker kun JWE-kryptering, ikke signering. Du trenger derfor ikke et eget sertifikat — kun den offentlige nøkkelen fra [JWKS-endepunktet](../endepunkter/jwk.md) for å kryptere requesten.
+    Nei. API-et bruker kun JWE-kryptering, ikke signering. Du trenger derfor ikke et eget sertifikat — kun den offentlige nøkkelen fra [JWK-endepunktet](../endepunkter/jwk.md) for å kryptere requesten.
 
 ??? question "Hvor ofte roteres JWK-nøklene?"
-    Nøklene kan roteres uten forvarsel. Klienter bør hente oppdaterte nøkler fra [JWKS-endepunktet](../endepunkter/jwk.md) jevnlig, og **ikke** hardkode nøkler lokalt. Nøklene leveres med en `exp`-verdi som angir utløpstidspunkt, og klienter bør sørge for å hente nye nøkler før de nåværende utløper. Nøklene kan gjerne caches.
+    Nøkkelen kan roteres uten forvarsel. Klienter bør hente oppdatert JWK fra [JWK-endepunktet](../endepunkter/jwk.md) jevnlig, og **ikke** hardkode nøkler lokalt. Nøkkelen leveres med en `exp`-verdi som angir utløpstidspunkt, og klienter bør sørge for å hente ny nøkkel før den nåværende utløper. Nøkkelen kan gjerne caches.
 
 ## Autentisering
 

@@ -1,6 +1,6 @@
-# Hent JWK-nøkler for kryptering
+# Hent JWK for kryptering
 
-Endepunkt for å hente de offentlige nøklene som brukes til å kryptere request-payloaden med JWE.
+Endepunkt for å hente den offentlige nøkkelen som brukes til å kryptere request-payloaden med JWE.
 
 ---
 
@@ -30,17 +30,13 @@ Responsen er én **JSON Web Key (JWK)** med offentlig RSA-nøkkel — nøkkelen 
 
 ```json
 {
-  "keys": [
-    {
-      "kty": "RSA",
-      "use": "enc",
-      "alg": "RSA-OAEP-256",
-      "kid": "frikortbifrost-enc-20260312-1",
-      "n": "sEe2Z3Xv...",
-      "e": "AQAB",
-      "exp": 1749724800
-    }
-  ]
+  "kty": "RSA",
+  "use": "enc",
+  "alg": "RSA-OAEP-256",
+  "kid": "frikortbifrost-enc-20260312-1",
+  "n": "sEe2Z3Xv...",
+  "e": "AQAB",
+  "exp": 1749724800
 }
 ```
 

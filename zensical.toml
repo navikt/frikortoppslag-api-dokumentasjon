@@ -10,7 +10,7 @@ nav = [
     { "Endepunkter" = [
         { "Hent egenandelsfritakstatus" = "endepunkter/hent_frikortstatus.md" },
         { "Klientstatus" = "endepunkter/klientstatus.md" },
-        { "Hent JWK-nøkler" = "endepunkter/jwk.md" },
+        { "Hent JWK" = "endepunkter/jwk.md" },
     ] },
     { "Generelt" = [
         { "Kodeverk" = "generelt/kodeverk.md" },
