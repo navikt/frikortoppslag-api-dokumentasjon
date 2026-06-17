@@ -33,6 +33,12 @@
 ??? question "Hvordan registrerer jeg en klient i HelseID?"
     Opprett en klient i [NHNs selvbetjeningsportal](https://utviklerportal.nhn.no/informasjonstjenester/helseid/) med tilgang til API-et «Helsedirektoratets API for frikortspørring» og scope `hdir:frikortsporring/read`.
 
+??? question "Hva er forskjellen på personlig avtale og avtale på virksomhet?"
+    Personlig avtale brukes når oppslaget gjøres på innlogget bruker, mens avtale på virksomhet brukes når oppslaget gjøres på organisasjonsnummer.  Se [forutsetningene på forsiden](../index.md#avtaler-for-samhandlere) for mer.
+
+??? question "Hvilken HelseID-flyt skal jeg bruke?"
+    Bruk `authorization_code` for personlig avtale og `client_credentials` for avtale på virksomhet. Se også [HelseIDs token-endepunkt](https://utviklerportal.nhn.no/informasjonstjenester/helseid/bruksmoenstre-og-eksempelkode/bruk-av-helseid/docs/teknisk-referanse/endepunkt/token-endepunktet_no_nbmd) for detaljene.
+
 ## Funksjonalitet
 
 ??? question "Støtter tjenesten mengdespørring (batch-oppslag)?"
