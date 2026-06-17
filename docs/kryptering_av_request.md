@@ -1,7 +1,7 @@
 # JWE-kryptering av request
 
 API-et bruker **JWE (JSON Web Encryption)** for å kryptere request-body i POST-forespørsler.
-Klienten krypterer JSON-payloaden med vår offentlige nøkkel, hentet fra [JWKS-endepunktet](endepunkter/jwk.md).
+Klienten krypterer JSON-payloaden med vår offentlige nøkkel, hentet fra [JWK-endepunktet](endepunkter/jwk.md).
 
 **Merk:** JWE-signering benyttes **ikke**. Kun kryptering er i bruk. Klienten trenger ikke et eget sertifikat for signering.
 
@@ -20,8 +20,8 @@ Klienten krypterer JSON-payloaden med vår offentlige nøkkel, hentet fra [JWKS-
 
 ### 1. Hent offentlig nøkkel
 
-Gjør et `GET`-kall til [/api/frikortsporring/jwks](endepunkter/jwk.md) for å hente gjeldende JWKS.
-Velg en nøkkel fra `keys`-arrayet. Noter `kid`-verdien — den må inkluderes i JWE-headeren.
+Gjør et `GET`-kall til [/api/frikortsporring/jwk](endepunkter/jwk.md) for å hente gjeldende JWK.
+Noter `kid`-verdien — den må inkluderes i JWE-headeren.
 
 ### 2. Bygg JSON-payload
 
@@ -94,11 +94,15 @@ import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.RSAEncrypter;
 import com.nimbusds.jose.jwk.*;
 
-// 1. Hent JWKS fra endepunktet
-JWKSet jwkSet = JWKSet.load(new URL("https://frikortbifrost.nav.no/api/frikortsporring/jwks"));
+// 1. Hent JWK fra endepunktet
+String jwkJson = new String(
+    new URL("https://frikortbifrost.nav.no/api/frikortsporring/jwk").openStream().readAllBytes(),
+    StandardCharsets.UTF_8
+);
+JWK jwk = JWK.parse(jwkJson);
 
-// 2. Velg nøkkel
-RSAKey rsaKey = (RSAKey) jwkSet.getKeys().get(0);
+// 2. Bruk nøkkelen direkte
+RSAKey rsaKey = (RSAKey) jwk;
 
 // 3. Bygg JWE-header
 JWEHeader header = new JWEHeader.Builder(JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A256GCM)

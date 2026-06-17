@@ -8,7 +8,7 @@ Endepunkt for å hente de offentlige nøklene som brukes til å kryptere request
 
 | Felt         | Verdi                              |
 |--------------|------------------------------------|
-| **Path**     | `/api/frikortsporring/jwks`        |
+| **Path**     | `/api/frikortsporring/jwk`         |
 | **Metode**   | `GET`                              |
 | **Auth**     | Ingen — endepunktet er åpent       |
 
@@ -20,13 +20,13 @@ Endepunkt for å hente de offentlige nøklene som brukes til å kryptere request
 
 | Statuskode | Beskrivelse                               |
 |------------|-------------------------------------------|
-| `200 OK`   | JWK-sett returnert.                       |
+| `200 OK`   | JWK returnert.                            |
 | `404 Not Found` | Ukjent API-path.                      |
 | `405 Method Not Allowed` | HTTP-metode er ikke tillatt for dette endepunktet. |
 
 ### Response body (200 OK)
 
-Responsen er et **JSON Web Key Set (JWKS)** med én offentlig RSA-nøkkel — nøkkelen med lengst gjenværende levetid:
+Responsen er én **JSON Web Key (JWK)** med offentlig RSA-nøkkel — nøkkelen med lengst gjenværende levetid:
 
 ```json
 {
@@ -70,6 +70,6 @@ Nøklene roteres jevnlig. Hver nøkkel har et `exp`-felt (Unix timestamp i sekun
 
 **Anbefalt praksis for konsumenter:**
 
-- Det er tillatt å cache nøkler lokalt for å unngå å hente dem ved hvert kall.
-- Når en cachet nøkkel har utløpt (sjekk `exp`-feltet), må konsumenten hente oppdaterte nøkler fra dette endepunktet.
+- Det er tillatt å cache nøkkelen lokalt for å unngå å hente den ved hvert kall.
+- Når en cachet nøkkel har utløpt (sjekk `exp`-feltet), må konsumenten hente oppdatert JWK fra dette endepunktet.
 - Bruk alltid `kid`-feltet fra nøkkelen i JWE-headeren, slik at mottaker kan finne riktig nøkkel for dekryptering.

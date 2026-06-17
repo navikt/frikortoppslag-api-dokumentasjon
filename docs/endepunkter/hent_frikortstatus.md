@@ -204,8 +204,8 @@ Vi har et sett med testpersoner som kan brukes i testmiljøet. Disse personene h
 
 | Borgerident | Egenandelsfritak | Beskrivelse                                                                                        |
 |-------------|------------------|----------------------------------------------------------------------------------------------------|
-| 19929802260 | Ja               | Har frikort for inneværende år.                                                                    |
-| 55848850062 | Ja               | Har frikort for inneværende år.                                                                    |
-| 27848539029 | Nei              | Har ikke frikort.                                                                                  |
-| 55819510007 | Nei              | Har ikke frikort.                                                                                  |
+| 22898595734 | Ja               | Har frikort for inneværende år.                                                                    |
+| 53859401909 | Ja               | Har frikort for inneværende år.                                                                    |
+| 17839597738 | Nei              | Har ikke frikort.                                                                                  |
+| 47927200909 | Nei              | Har ikke frikort.                                                                                  |
 | 25909799913 | Ja (Blåresept)   | Har ikke frikort, men har status som minstepensjonist. Vil returnere true på tjenestetype A, B, S. |

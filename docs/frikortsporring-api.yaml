@@ -40,7 +40,7 @@ info:
 
     Request-body **skal** krypteres med JWE (JSON Web Encryption) i henhold til
     [RFC 7516](https://datatracker.ietf.org/doc/html/rfc7516).
-    Den offentlige JWK-nøkkelen som skal brukes til kryptering, hentes fra `/jwks`-endepunktet.
+    Den offentlige JWK-nøkkelen som skal brukes til kryptering, hentes fra `/jwk`-endepunktet.
 
     Algoritmer som brukes:
     - Key encryption: `RSA-OAEP-256`
@@ -430,32 +430,31 @@ paths:
                 melding: "En uventet feil oppstod. Oppgi correlationId ved support-henvendelse"
                 timestamp: "1716283200000"
 
-  /api/frikortsporring/jwks:
+  /api/frikortsporring/jwk:
     get:
       tags:
         - Kryptering
       summary: Hent offentlig JWK for kryptering av request
-      operationId: hentJwks
+      operationId: hentJwk
       description: |
-        Returnerer det offentlige JWK-settet som konsumenten skal bruke til å kryptere
-        request-payloaden med JWE. Nøklene roteres jevnlig; konsumenten bør alltid hente
+        Returnerer den offentlige JWK-en som konsumenten skal bruke til å kryptere
+        request-payloaden med JWE. Nøkkelen roteres jevnlig; konsumenten bør alltid hente
         gjeldende nøkkel fra dette endepunktet og ikke cache den over lengre tid.
       responses:
         '200':
-          description: JWK-sett med offentlig(e) krypteringsnøkkel(er)
+          description: Offentlig JWK for kryptering
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/JwkSet'
+                $ref: '#/components/schemas/Jwk'
               example:
-                keys:
-                  - kty: RSA
-                    use: enc
-                    alg: RSA-OAEP-256
-                    kid: "frikortbifrost-enc-20260312-1"
-                    n: "sEe2Z3Xv..."
-                    e: "AQAB"
-                    exp: 1776939606
+                kty: RSA
+                use: enc
+                alg: RSA-OAEP-256
+                kid: "frikortbifrost-enc-20260312-1"
+                n: "sEe2Z3Xv..."
+                e: "AQAB"
+                exp: 1776939606
         '404':
           description: Ukjent API-path
           headers:
@@ -692,17 +691,6 @@ components:
         - INGEN_TILGANG
         - FOR_MANGE_FORESPORSLER
         - INTERN_FEIL
-
-    JwkSet:
-      type: object
-      description: JSON Web Key Set (JWKS) med offentlig(e) krypteringsnøkkel(er)
-      required:
-        - keys
-      properties:
-        keys:
-          type: array
-          items:
-            $ref: '#/components/schemas/Jwk'
 
     Jwk:
       type: object

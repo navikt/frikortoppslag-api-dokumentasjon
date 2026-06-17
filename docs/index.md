@@ -34,7 +34,7 @@ For å kunne bruke API-et må følgende være på plass:
 |------|------|--------|-------------|
 | [Hent egenandelsfritakstatus](endepunkter/hent_frikortstatus.md) | `/api/frikortsporring/helseid/v1` | POST | Sjekker om en borger er fritatt fra egenandel for en gitt tjenestetype på en gitt dato. |
 | [Klientstatus](endepunkter/klientstatus.md) | `/api/frikortsporring/helseid/v1/klientstatus` | POST | Verifiserer at integrasjonen er korrekt satt opp (autentisering, kryptering og avtaleforhold). |
-| [Hent JWK-nøkler](endepunkter/jwk.md) | `/api/frikortsporring/jwks` | GET | Henter offentlige nøkler for JWE-kryptering av request. |
+| [Hent JWK](endepunkter/jwk.md) | `/api/frikortsporring/jwk` | GET | Henter offentlig JWK for JWE-kryptering av request. |
 
 ### Typer endepunkt
 
