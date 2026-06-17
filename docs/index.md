@@ -19,14 +19,14 @@ For å kunne bruke API-et må følgende være på plass:
 2. Helseaktøren/leverandør må ha en klient registrert hos HelseID med tilgang til API-et (se [Autentisering](#autentisering-og-autorisasjon)).
 3. Request-body må krypteres med JWE (se [JWE-kryptering](kryptering_av_request.md)).
 
-### Avtaler for samhandlere
+### Avtaler for helseaktører
 
 Helseaktører må ha en gyldig avtale om direkte oppgjør med Helfo. Avtalen kan være knyttet enten til virksomheten eller til en person.
 
 - **Avtale på virksomhet**: typisk for aktører der oppslaget gjøres på organisasjonsnummer (f.eks apotek).
 - **Personlig avtale**: typisk for behandlere der oppslaget gjøres på innlogget bruker (f.eks tannlege eller fysioterapeut).
 
-Hvilken avtaletype som gjelder, må samhandleren selv kjenne til og konfigurere integrasjonen etter.
+Hvilken avtaletype som gjelder, må helseaktøren selv kjenne til og konfigurere integrasjonen etter.
 
 I integrasjonen mot HelseID betyr dette i praksis:
 
@@ -35,7 +35,7 @@ I integrasjonen mot HelseID betyr dette i praksis:
 
 Se også [HelseIDs token-endepunkt](https://utviklerportal.nhn.no/informasjonstjenester/helseid/bruksmoenstre-og-eksempelkode/bruk-av-helseid/docs/teknisk-referanse/endepunkt/token-endepunktet_no_nbmd) for detaljene om de to flytene.
 
-Ved personlig avtale begrenses videre bruk av levetiden til refresh-tokenet som HelseID utsteder. Levetiden oppgis i token-responsen fra NHN/HelseID og vil typisk vare en drøy arbeidsdag. Det betyr at batchjobber og andre prosesser som krever innlogget bruker må fullføres mens refresh-tokenet fortsatt er gyldig. Dersom utløpt må samhandler logge inn på nytt for nytt token. Se også [NHNs dokumentasjon om refresh-token](https://selvbetjening.nhn.no/docs#refresh-token).
+Ved personlig avtale begrenses videre bruk tokenet til levetiden på refresh-tokenet som HelseID utsteder. Levetiden oppgis i token-responsen fra NHN/HelseID og vil typisk vare en drøy arbeidsdag. Det betyr at batchjobber og andre prosesser som krever innlogget bruker må fullføres mens refresh-tokenet fortsatt er gyldig. Dersom utløpt må helseaktøren logge inn på nytt for nytt token. Se også [NHNs dokumentasjon om refresh-token](https://selvbetjening.nhn.no/docs#refresh-token).
 
 ## Miljøer
 
