@@ -65,8 +65,8 @@ Responsen returneres som ukryptert JSON med `Content-Type: application/json`.
     "beskrivelse": "JWE-dekryptering vellykket"
   },
   "helfoAvtale": {
-    "status": "IKKE_IMPLEMENTERT",
-    "beskrivelse": "Avtalevalidering er ikke implementert ennå"
+    "status": "OK",
+    "beskrivelse": "Samhandler har aktiv avtale med HELFO"
   }
 }
 ```
@@ -75,7 +75,7 @@ Responsen returneres som ukryptert JSON med `Content-Type: application/json`.
 
 | Felt              | Type   | Beskrivelse                                                                                                                                                   |
 |-------------------|--------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `overordnetStatus`| String | Samlet status for alle sjekker. `OK` hvis alle sjekker er OK eller IKKE_IMPLEMENTERT. `FEIL` hvis én eller flere sjekker feiler.                              |
+| `overordnetStatus`| String | Samlet status for alle sjekker. `OK` hvis alle sjekker er OK. `FEIL` hvis én eller flere sjekker feiler.                              |
 | `autentisering`   | Sjekk  | Resultat av DPoP-autentiseringssjekken. Vil alltid være `OK` i 200-responsen, ettersom autentiseringsfeil gir en feilrespons (401/400) før denne sjekken nås. |
 | `kryptering`      | Sjekk  | Resultat av JWE-dekrypteringssjekken.                                                                                                                         |
 | `helfoAvtale`      | Sjekk  | Resultat av avtalesjekk mot Helfos register. Se [Kontroll av avtaleforhold](../index.md#kontroll-av-avtaleforhold).                                           |
@@ -84,7 +84,7 @@ Responsen returneres som ukryptert JSON med `Content-Type: application/json`.
 
 | Felt         | Type   | Beskrivelse                              |
 |--------------|--------|------------------------------------------|
-| `status`     | String | `OK`, `FEIL` eller `IKKE_IMPLEMENTERT`.  |
+| `status`     | String | `OK` eller `FEIL`.                       |
 | `beskrivelse`| String | Menneskelig lesbar beskrivelse av resultatet. |
 
 ### Mulige statusverdier
@@ -93,7 +93,6 @@ Responsen returneres som ukryptert JSON med `Content-Type: application/json`.
 |----------------------|------------------------------------------------------------------|
 | `OK`                 | Sjekken ble utført og bestått.                                   |
 | `FEIL`               | Sjekken ble utført, men feilet.                                  |
-| `IKKE_IMPLEMENTERT`  | Sjekken er ikke implementert ennå.                               |
 
 ### Response headers
 
@@ -165,8 +164,8 @@ Correlation-Id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
     "beskrivelse": "JWE-dekryptering feilet: ugyldig nøkkel"
   },
   "helfoAvtale": {
-    "status": "IKKE_IMPLEMENTERT",
-    "beskrivelse": "Avtalevalidering er ikke implementert ennå"
+    "status": "OK",
+    "beskrivelse": "Samhandler har aktiv avtale med HELFO"
   }
 }
 ```

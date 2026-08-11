@@ -79,10 +79,7 @@ Mer informasjon om HelseID og oppsett:
 
 ### Kontroll av avtaleforhold
 
-!!! warning "Kommende funksjonalitet"
-    Avtalevalidering er under utvikling og er ikke implementert ennå. Dokumentasjonen beskriver planlagt oppførsel.
-
-I tillegg til autentisering via HelseID, vil API-et kontrollere at den som gjør oppslaget har en aktiv avtale med Helfo. Denne kontrollen gjøres mot Helfos register over avtaleforhold, og utføres **før** noe svar returneres.
+I tillegg til autentisering via HelseID kontrollerer API-et at den som gjør oppslaget har en aktiv avtale med Helfo. Denne kontrollen gjøres mot Helfos register over avtaleforhold, og utføres **før** noe svar returneres.
 
 Registeret sjekkes i følgende rekkefølge, basert på informasjonen i claims fra HelseID-tokenet:
 
@@ -90,7 +87,7 @@ Registeret sjekkes i følgende rekkefølge, basert på informasjonen i claims fr
 2. **Underenhetens organisasjonsnummer (`orgnr_child`):** Dersom det ikke finnes et PID-claim i tokenet, brukes organisasjonsnummeret til underenheten (child) for oppslag.
 3. **Hovedenhetens organisasjonsnummer (`orgnr_parent`):** Dersom hverken PID-claim eller `orgnr_child` er tilgjengelig, brukes organisasjonsnummeret til hovedenheten (parent) for oppslag.
 
-Dersom ingen av identifikatorene gir treff i avtaleregisteret, vil API-et returnere **`403 Forbidden`** med feilkode `INGEN_TILGANG`.
+Dersom ingen av identifikatorene gir treff i avtaleregisteret, returnerer API-et **`403 Forbidden`** med feilkode `INGEN_TILGANG`.
 
 ---
 

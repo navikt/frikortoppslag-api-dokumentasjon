@@ -2,6 +2,7 @@
 
 | Dato       | Versjon | Beskrivelse                                                                                                                     |
 |------------|---------|---------------------------------------------------------------------------------------------------------------------------------|
+| 2026-08-11 | 1.6     | Avtalekontroll mot Helfo er nå aktiv. Oppdaterer klientstatus-eksempler (helfoAvtale gir OK/FEIL) og fjerner «kommende»-forbehold. |
 | 2025-06-17 | 1.5     | Legger til avsnitt (og punkt i FAQ) om avtaler for samhandlere på forsiden.                                                     |
 | 2025-06-17 | 1.4     | Endrer fra JWKS til JWK på endepunkt. Oppdaterer testpersoner til Tenor-identer                                                 |
 | 2025-06-04 | 1.3     | Legger til 404 og 405 endepunkter på alle API-endepunkter. Fjerner DPoP-feil fra 400-eksempler. Legger til Allow-header i docs. |

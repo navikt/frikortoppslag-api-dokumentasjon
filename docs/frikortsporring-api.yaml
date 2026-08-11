@@ -307,7 +307,7 @@ paths:
                       beskrivelse: "JWE-dekryptering vellykket"
                     helfoAvtale:
                       status: "OK"
-                      beskrivelse: "Aktiv avtale funnet"
+                      beskrivelse: "Samhandler har aktiv avtale med HELFO"
                 krypteringFeil:
                   summary: Kryptering feiler
                   value:
@@ -319,8 +319,8 @@ paths:
                       status: "FEIL"
                       beskrivelse: "JWE-dekryptering feilet: ugyldig nøkkel"
                     helfoAvtale:
-                      status: "IKKE_IMPLEMENTERT"
-                      beskrivelse: "Avtalevalidering er ikke implementert ennå"
+                      status: "OK"
+                      beskrivelse: "Samhandler har aktiv avtale med HELFO"
         '400':
           description: Ugyldig request
           headers:
@@ -607,7 +607,7 @@ components:
           type: string
           description: |
             Samlet status for alle sjekker.
-            `OK` hvis alle sjekker er OK eller IKKE_IMPLEMENTERT.
+            `OK` hvis alle sjekker er OK.
             `FEIL` hvis én eller flere sjekker feiler.
           enum:
             - OK
@@ -632,11 +632,9 @@ components:
             Resultat av sjekken.
             - `OK` – Sjekken ble utført og bestått.
             - `FEIL` – Sjekken ble utført, men feilet.
-            - `IKKE_IMPLEMENTERT` – Sjekken er ikke implementert ennå.
           enum:
             - OK
             - FEIL
-            - IKKE_IMPLEMENTERT
         beskrivelse:
           type: string
           description: Beskrivelse av resultatet
