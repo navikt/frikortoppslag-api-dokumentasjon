@@ -1,8 +1,5 @@
 # Frikortoppslag API
 
-!!! warning "Kun tilgjengelig i testmiljø"
-    API-et er foreløpig kun tilgjengelig i testmiljøet. Kall mot produksjonsmiljøet vil feile.
-
 Frikortløsningen tilbyr API-baserte tjenester for samhandling med behandlere, apotek og andre aktører i helsesektoren som har avtale med Helfo om direkte oppgjør.
 
 ## Tjenesten
@@ -88,6 +85,18 @@ Registeret sjekkes i følgende rekkefølge, basert på informasjonen i claims fr
 3. **Hovedenhetens organisasjonsnummer (`orgnr_parent`):** Dersom hverken PID-claim eller `orgnr_child` er tilgjengelig, brukes organisasjonsnummeret til hovedenheten (parent) for oppslag.
 
 Dersom ingen av identifikatorene gir treff i avtaleregisteret, returnerer API-et **`403 Forbidden`** med feilkode `INGEN_TILGANG`.
+
+#### Testdata for avtalekontroll
+
+For å komme gjennom avtalekontrollen i testmiljøet må aktøren finnes i Helfos avtaleregister. Hvordan dette settes opp avhenger av avtaletypen:
+
+- **Avtale på virksomhet (organisasjonsnummer):** Organisasjonsnummeret må legges til i avtaleregisteret.
+- **Personlig avtale (typisk tannlege og lege):** Aktøren må selv opprette avtalen på personen (fødselsnummeret som sendes i PID-claimet).
+
+Kuhr har publisert en veiledning for oppsett av testdata som også dekker avtaleregisteret: [testdata.md (kuhr-krav-api-dokumentasjon)](https://github.com/navikt/kuhr-krav-api-dokumentasjon/blob/main/testdata.md).
+
+!!! tip "Sett opp personlig avtale også i test"
+    Behandlere med personlig avtale (typisk tannlege og lege) må sende med et HelseID-token med `pid` (behandlerens personlige ident/FNR). Avtalekontrollen er ikke like streng i testmiljøet, men dersom dere skal ha personlig avtale i produksjon anbefaler vi å sette den opp i testmiljøet også, slik at integrasjonen testes med riktig oppsett.
 
 ---
 
