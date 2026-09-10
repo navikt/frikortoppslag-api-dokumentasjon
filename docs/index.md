@@ -92,11 +92,11 @@ For å komme gjennom avtalekontrollen i testmiljøet må aktøren finnes i Helfo
 
 - **Avtale på virksomhet (organisasjonsnummer):** Organisasjonsnummeret må legges til i avtaleregisteret manuelt. Kontakt oss.
 - **Personlig avtale (typisk tannlege og lege):** Du kan selv finne en test-helseaktør som eksisterer eller opprette en i Syntpop (fødselsnummeret som sendes i PID-claimet).
-  - Gå inn på https://syntpop.nhn.no/. Finn eller opprett en helseaktør. Den må eksistere med FNR og i HPR. Legg til gyldig rekvisisjonsrett og gyldig periode. Helst ikke velg en som er markert "Annen eier".
-  - Deretter må du inn på https://praksisinformasjon.test.helsedirektoratet.no/. Logg inn med TEST-IDP og FNR til helseaktøren.
-    - Helseaktør - Legg inn nødvendig informasjon (Bl.a. kreves e-post og telefonnummer for å registrere praksis)
-    - Praksiser - Registrer en gyldig praksis for helseaktøren
-    - Avtaler og samtykker - Registrer avtale om direkte oppgjør.
+    - Gå inn på https://syntpop.nhn.no/. Finn eller opprett en helseaktør. Den må eksistere med FNR og i HPR. Legg til gyldig rekvisisjonsrett og gyldig periode. Helst ikke velg en som er markert "Annen eier".
+    - Deretter må du inn på https://praksisinformasjon.test.helsedirektoratet.no/. Logg inn med TEST-IDP og FNR til helseaktøren.
+        - Helseaktør - Legg inn nødvendig informasjon (Bl.a. kreves e-post og telefonnummer for å registrere praksis)
+        - Praksiser - Registrer en gyldig praksis for helseaktøren
+        - Avtaler og samtykker - Registrer avtale om direkte oppgjør.
 
 Etter dette er gjort må du forvente noe synk-tid før avtalen er registrert hos oss. Ta kontakt dersom den ikke er registrert innen 24 timer (du vil få 403 - Ingen gyldig HELFO-avtale).
 
