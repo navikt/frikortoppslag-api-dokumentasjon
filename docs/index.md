@@ -70,6 +70,7 @@ API-et bruker **HelseID** for autentisering og autorisasjon. HelseID-tokenet **m
 
 1. Opprett en klient i NHNs selvbetjeningsportal med tilgang til API-et **«Helsedirektoratets API for frikortspørring»**.
 2. Konfigurer klienten med scope **`hdir:frikortsporring/read`**.
+3. Ved token-forespørselen til HelseID **må** du sende med `resource`-parameteren satt til **`hdir:frikortsporring`**. Dette gir et audience-avgrenset token mot API-et. Verdien er den samme i test og produksjon.
 
 Mer informasjon om HelseID og oppsett:
 [HelseID – NHN utviklerportal](https://utviklerportal.nhn.no/informasjonstjenester/helseid/)

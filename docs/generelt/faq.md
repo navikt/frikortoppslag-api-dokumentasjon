@@ -30,6 +30,9 @@
 ??? question "Støttes vanlige Bearer-tokens?"
     Nei. API-et krever DPoP-baserte tokens. Vanlige Bearer-tokens blir avvist.
 
+??? question "Hva er `resource`-parameteren, og er den lik i test og produksjon?"
+    `resource`-parameteren sendes med i token-forespørselen til HelseID (RFC 8707) og gir et audience-avgrenset token mot API-et. Den **må** settes til `hdir:frikortsporring`. Verdien er den samme i både test og produksjon. Merk at dette er noe annet enn scope (`hdir:frikortsporring/read`).
+
 ??? question "Hvordan registrerer jeg en klient i HelseID?"
     Opprett en klient i [NHNs selvbetjeningsportal](https://utviklerportal.nhn.no/informasjonstjenester/helseid/) med tilgang til API-et «Helsedirektoratets API for frikortspørring» og scope `hdir:frikortsporring/read`.
 

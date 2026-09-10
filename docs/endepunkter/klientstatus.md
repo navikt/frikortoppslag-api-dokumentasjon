@@ -4,6 +4,8 @@ Endepunkt som lar konsumenter verifisere at integrasjonen er korrekt satt opp, u
 
 Endepunktet validerer kryptering og avtaleforhold, og returnerer status for hver sjekk. Autentisering (DPoP) valideres først — ved autentiseringsfeil returneres en vanlig feilrespons (se [feilresponser](hent_frikortstatus.md#feilresponser)) før klientstatus-sjekken utføres.
 
+Endepunktet er tilgjengelig i både test og produksjon, på samme base-URL-er som de øvrige endepunktene (se [Miljøer](../index.md#miljøer)).
+
 ---
 
 ## Endepunkt

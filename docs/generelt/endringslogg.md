@@ -2,6 +2,7 @@
 
 | Dato       | Versjon | Beskrivelse                                                                                                                        |
 |------------|---------|------------------------------------------------------------------------------------------------------------------------------------|
+| 2026-09-10 | 1.9     | Spesifiserer resource og klientstatus miljøtilgjengelighet.                                                                        |
 | 2026-09-10 | 1.8     | Legger til bedre veiledning for oppsett av HELFO-avtale i test.                                                                    |
 | 2026-09-03 | 1.7     | API-et er prodsatt. Legger til veiledning om testdata og oppsett av avtale i avtaleregisteret.                                     |
 | 2026-08-11 | 1.6     | Avtalekontroll mot Helfo er nå aktiv. Oppdaterer klientstatus-eksempler (helfoAvtale gir OK/FEIL) og fjerner «kommende»-forbehold. |
