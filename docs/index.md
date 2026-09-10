@@ -90,13 +90,19 @@ Dersom ingen av identifikatorene gir treff i avtaleregisteret, returnerer API-et
 
 For å komme gjennom avtalekontrollen i testmiljøet må aktøren finnes i Helfos avtaleregister. Hvordan dette settes opp avhenger av avtaletypen:
 
-- **Avtale på virksomhet (organisasjonsnummer):** Organisasjonsnummeret må legges til i avtaleregisteret.
-- **Personlig avtale (typisk tannlege og lege):** Aktøren må selv opprette avtalen på personen (fødselsnummeret som sendes i PID-claimet).
+- **Avtale på virksomhet (organisasjonsnummer):** Organisasjonsnummeret må legges til i avtaleregisteret manuelt. Kontakt oss.
+- **Personlig avtale (typisk tannlege og lege):** Du kan selv finne en test-helseaktør som eksisterer eller opprette en i Syntpop (fødselsnummeret som sendes i PID-claimet).
+  - Gå inn på https://syntpop.nhn.no/. Finn eller opprett en helseaktør. Den må eksistere med FNR og i HPR. Legg til gyldig rekvisisjonsrett og gyldig periode. Helst ikke velg en som er markert "Annen eier".
+  - Deretter må du inn på https://praksisinformasjon.test.helsedirektoratet.no/. Logg inn med TEST-IDP og FNR til helseaktøren.
+    - Helseaktør - Legg inn nødvendig informasjon (Bl.a. kreves e-post og telefonnummer for å registrere praksis)
+    - Praksiser - Registrer en gyldig praksis for helseaktøren
+    - Avtaler og samtykker - Registrer avtale om direkte oppgjør.
 
-Kuhr har publisert en veiledning for oppsett av testdata som også dekker avtaleregisteret: [testdata.md (kuhr-krav-api-dokumentasjon)](https://github.com/navikt/kuhr-krav-api-dokumentasjon/blob/main/testdata.md).
+Etter dette er gjort må du forvente noe synk-tid før avtalen er registrert hos oss. Ta kontakt dersom den ikke er registrert innen 24 timer (du vil få 403 - Ingen gyldig HELFO-avtale).
+
 
 !!! tip "Sett opp personlig avtale også i test"
-    Behandlere med personlig avtale (typisk tannlege og lege) må sende med et HelseID-token med `pid` (behandlerens personlige ident/FNR). Avtalekontrollen er ikke like streng i testmiljøet, men dersom dere skal ha personlig avtale i produksjon anbefaler vi å sette den opp i testmiljøet også, slik at integrasjonen testes med riktig oppsett.
+    Behandlere med personlig avtale (typisk tannlege og lege) må sende med et HelseID-token med `pid` (behandlerens personlige ident/FNR). Avtalekontrollen er ikke like streng i testmiljøet, men dersom dere skal ha personlig avtale i produksjon anbefaler vi å sette den opp i testmiljøet også, slik at integrasjonen testes med riktig oppsett. Det inkluderer også å sende med orgnr_parent.
 
 ---
 
