@@ -107,6 +107,25 @@ Etter dette er gjort må du forvente noe synk-tid før avtalen er registrert hos
 
 ---
 
+## Riktig bruk og tjenstlig behov
+
+Oppslag mot API-et skal kun gjøres når det foreligger et **tjenstlig behov**, det vil si i forbindelse med behandling, utlevering eller oppgjør for en borger du (eller virksomheten) har en konkret relasjon til. Oppslag avslører sensitive personopplysninger og logges for sporbarhet og kontroll.
+
+**Eksempler på akseptabel bruk, med tjenstlig behov:**
+
+- En behandler slår opp en borger som er inne til time/behandling hos vedkommende.
+- Et apotek eller en bandasjist slår opp en kunde ved utlevering av vare/resept.
+- Oppslag i forbindelse med en planlagt konsultasjon der borgeren har en relasjon til behandleren/virksomheten.
+
+**Eksempler på uakseptabel bruk, uten tjenstlig behov:**
+
+- Oppslag på personer du ikke har en behandlingsrelasjon til (f.eks er ugyldige grunner nysgjerrighet, familie, naboer, offentlig kjente personer).
+- Oppslag for andre formål enn å vurdere egenandelsfritak, f.eks. for å bygge egne registre.
+
+Misbruk kan følges opp og føre til at tilgangen trekkes tilbake.
+
+---
+
 ## OpenAPI-spesifikasjon
 
 Swagger for OpenAPI: [SWAGGER - FRIKORTSPORRING-API](https://frikortbifrost.ekstern.dev.nav.no/swagger-ui/index.html)

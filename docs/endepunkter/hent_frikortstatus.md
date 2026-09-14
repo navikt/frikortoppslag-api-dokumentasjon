@@ -134,7 +134,7 @@ Ved feil (4xx/5xx) returneres en JSON-body med følgende struktur:
 
 ## Caching og duplikate oppslag
 
-Frikortstatus oppdateres kun én gang per døgn. For å unngå unødvendige kall til tjenesten skal det i utgangspunktet kun sendes **én spørring per borger per døgn per behandler/tjenesteyter**.
+For å unngå unødvendige kall til tjenesten skal det i utgangspunktet kun sendes **én spørring per borger per døgn per behandler/tjenesteyter**.
 
 Et duplikat-oppslag er her et oppslag en behandler/tjenesteyter gjør som er identisk med et oppslag samme behandler har gjort tidligere samme døgn — altså samme fødselsnummer, tjenestedato og tjenestetypekode. For eksempel at en lege gjør flere oppslag samme døgn med samme fødselsnummer, dato og tjenestetypekode.
 
