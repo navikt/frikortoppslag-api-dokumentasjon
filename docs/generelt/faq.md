@@ -50,6 +50,9 @@
 ??? question "Støtter tjenesten mengdespørring (batch-oppslag)?"
     Nei. API-et tilbyr kun enkeltoppslag. Dersom du tidligere har brukt mengdespørring, må hvert oppslag nå gjøres som separate kall mot API-et.
 
+??? question "Må jeg cache svarene på klientsiden?"
+    Ja. Frikortstatus oppdateres kun én gang per døgn, så det skal i utgangspunktet kun sendes én spørring per borger per døgn per behandler/tjenesteyter. Se [Caching og duplikate oppslag](../endepunkter/hent_frikortstatus.md#caching-og-duplikate-oppslag).
+
 ??? question "Kan jeg slå opp historisk frikortstatus?"
     Ja, du kan angi en vilkårlig `tjenestedato` i requesten, men maks 2 år tilbake i tid. 
 
