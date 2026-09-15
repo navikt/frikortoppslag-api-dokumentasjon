@@ -6,6 +6,9 @@ Fritak gjelder hvis borgeren har innvilget frikort for det kalenderåret tjenest
 
 **Reservasjon:** Borgere kan reservere seg mot den automatiske frikortordningen. For borgere med reservasjon vil tjenesten alltid svare negativt (`harEgenandelsfritak: false`). Borgere med reservasjon må selv fremvise frikortbevis.
 
+!!! warning "Krav: cache svar på klientsiden"
+    For å unngå unødvendige, duplikate oppslag skal svar caches på klientsiden. Se [Caching og duplikate oppslag](#caching-og-duplikate-oppslag).
+
 
 ---
 
@@ -126,6 +129,17 @@ Ved feil (4xx/5xx) returneres en JSON-body med følgende struktur:
 | `METODE_IKKE_TILLATT`     | 405         | HTTP-metode er ikke tillatt for dette endepunktet.                                         |
 | `FOR_MANGE_FORESPORSLER`  | 429         | Konsumenten har sendt for mange forespørsler i et gitt tidsrom.                            |
 | `INTERN_FEIL`             | 500         | Uventet feil på serversiden. Oppgi `correlationId` ved support-henvendelse.                |
+
+---
+
+## Caching og duplikate oppslag
+
+For å unngå unødvendige kall til tjenesten skal det i utgangspunktet kun sendes **én spørring per borger per døgn per behandler/tjenesteyter**.
+
+Et duplikat-oppslag er her et oppslag en behandler/tjenesteyter gjør som er identisk med et oppslag samme behandler har gjort tidligere samme døgn — altså samme fødselsnummer, tjenestedato og tjenestetypekode. For eksempel at en lege gjør flere oppslag samme døgn med samme fødselsnummer, dato og tjenestetypekode.
+
+Store mengder duplikate oppslag skaper unødvendig ekstrabelastning på tjenesten og er med på å skape driftsutfordringer som kunne vært unngått. Det forventes at journalsystemet er i stand til å ta vare på kall gjort siste døgn, slik at det ikke kjøres flere identiske oppslag innenfor samme døgn.
+
 
 ---
 
