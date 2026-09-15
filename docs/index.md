@@ -120,6 +120,7 @@ Oppslag mot API-et skal kun gjøres når det foreligger et **tjenstlig behov**, 
 **Eksempler på uakseptabel bruk, uten tjenstlig behov:**
 
 - Oppslag på personer du ikke har en behandlingsrelasjon til (f.eks er ugyldige grunner nysgjerrighet, familie, naboer, offentlig kjente personer).
+- Oppslag av hele pasientlisten til en fastlege for å sitte med oppdatert frikortstatus for alle legens pasienter.
 - Oppslag for andre formål enn å vurdere egenandelsfritak, f.eks. for å bygge egne registre.
 
 Misbruk kan følges opp og føre til at tilgangen trekkes tilbake.
