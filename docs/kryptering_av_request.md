@@ -20,8 +20,7 @@ Klienten krypterer JSON-payloaden med vår offentlige nøkkel, hentet fra [JWK-e
 
 ### 1. Hent offentlig nøkkel
 
-Gjør et `GET`-kall til [/api/frikortsporring/jwk](endepunkter/jwk.md) for å hente gjeldende JWK.
-Noter `kid`-verdien — den må inkluderes i JWE-headeren.
+Hent JWK fra [/api/frikortsporring/jwk](endepunkter/jwk.md) ved oppstart og cache den. Gjenbruk den cachede nøkkelen ved frikortoppslag; **ikke hent JWK på nytt for hvert kall**. Forny cachen før nøkkelen utløper (se `exp`-feltet). `kid`-verdien må inkluderes i JWE-headeren.
 
 ### 2. Bygg JSON-payload
 
@@ -88,6 +87,8 @@ Responsen returneres som **ukryptert JSON** (`application/json`).
 ---
 
 ## Kodeeksempel (Java med Nimbus JOSE + JWT)
+
+Henting av JWK i eksempelet skal gjøres ved oppstart og ved fornyelse før `exp`, ikke for hvert frikortoppslag. Oppbevar og gjenbruk nøkkelen mellom oppslag.
 
 ```java
 import com.nimbusds.jose.*;

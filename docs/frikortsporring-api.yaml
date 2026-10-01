@@ -40,7 +40,8 @@ info:
 
     Request-body **skal** krypteres med JWE (JSON Web Encryption) i henhold til
     [RFC 7516](https://datatracker.ietf.org/doc/html/rfc7516).
-    Den offentlige JWK-nøkkelen som skal brukes til kryptering, hentes fra `/jwk`-endepunktet.
+    Den offentlige JWK-nøkkelen som skal brukes til kryptering, hentes fra
+    `/api/frikortsporring/jwk` og caches lokalt.
 
     Algoritmer som brukes:
     - Key encryption: `RSA-OAEP-256`
@@ -253,6 +254,8 @@ paths:
         Endepunkt som lar konsumenter verifisere at integrasjonen er korrekt satt opp,
         uten å gjøre oppslag på ekte borgere.
 
+        Endepunktet er ment å brukes til oppsett eller manuell kontroll og feilsøking, ikke automatiserte kall.
+
         Endepunktet validerer hele kjeden — autentisering, kryptering og avtaleforhold — og
         returnerer status for hver enkelt sjekk.
 
@@ -438,8 +441,9 @@ paths:
       operationId: hentJwk
       description: |
         Returnerer den offentlige JWK-en som konsumenten skal bruke til å kryptere
-        request-payloaden med JWE. Nøkkelen roteres jevnlig; konsumenten bør alltid hente
-        gjeldende nøkkel fra dette endepunktet og ikke cache den over lengre tid.
+        request-payloaden med JWE. Nøkkelen roteres jevnlig. Cache JWK lokalt og gjenbruk
+        den ved frikortoppslag; ikke kall dette endepunktet for hvert oppslag.
+        Forny cachen før nøkkelen utløper (se `exp`-feltet).
       responses:
         '200':
           description: Offentlig JWK for kryptering
