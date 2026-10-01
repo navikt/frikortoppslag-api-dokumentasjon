@@ -2,6 +2,7 @@
 
 | Dato       | Versjon | Beskrivelse                                                                                                                        |
 |------------|---------|------------------------------------------------------------------------------------------------------------------------------------|
+| 2026-10-01 | 1.11    | Presiserer at JWK skal caches og at klientstatus kun brukes ved oppsett eller manuell kontroll, ikke i automatiserte oppslag.      |
 | 2026-09-14 | 1.10    | Legger til krav om klientsidecaching og avsnitt om tjenstlig behov / riktig bruk.                                                  |
 | 2026-09-10 | 1.9     | Spesifiserer resource og klientstatus miljøtilgjengelighet.                                                                        |
 | 2026-09-10 | 1.8     | Legger til bedre veiledning for oppsett av HELFO-avtale i test.                                                                    |

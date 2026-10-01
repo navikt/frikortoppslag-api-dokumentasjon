@@ -20,7 +20,7 @@
     Nei. API-et bruker kun JWE-kryptering, ikke signering. Du trenger derfor ikke et eget sertifikat — kun den offentlige nøkkelen fra [JWK-endepunktet](../endepunkter/jwk.md) for å kryptere requesten.
 
 ??? question "Hvor ofte roteres JWK-nøklene?"
-    Nøkkelen kan roteres uten forvarsel. Klienter bør hente oppdatert JWK fra [JWK-endepunktet](../endepunkter/jwk.md) jevnlig, og **ikke** hardkode nøkler lokalt. Nøkkelen leveres med en `exp`-verdi som angir utløpstidspunkt, og klienter bør sørge for å hente ny nøkkel før den nåværende utløper. Nøkkelen kan gjerne caches.
+    Nøkkelen kan roteres uten forvarsel. **Cache JWK lokalt og gjenbruk den ved oppslag.** Hent ny nøkkel fra [JWK-endepunktet](../endepunkter/jwk.md) før den cachede nøkkelen utløper (`exp` angir utløpstidspunktet). Ikke hardkod nøkler lokalt.
 
 ## Autentisering
 

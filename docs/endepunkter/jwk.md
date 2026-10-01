@@ -64,8 +64,7 @@ Responsen er én **JSON Web Key (JWK)** med offentlig RSA-nøkkel — nøkkelen 
 
 Nøklene roteres jevnlig. Hver nøkkel har et `exp`-felt (Unix timestamp i sekunder) som angir utløpsdato.
 
-**Anbefalt praksis for konsumenter:**
+**Konsumenter skal cache JWK lokalt og gjenbruke den ved frikortoppslag. Ikke kall dette endepunktet for hvert oppslag.**
 
-- Det er tillatt å cache nøkkelen lokalt for å unngå å hente den ved hvert kall.
 - Når en cachet nøkkel har utløpt (sjekk `exp`-feltet), må konsumenten hente oppdatert JWK fra dette endepunktet.
 - Bruk alltid `kid`-feltet fra nøkkelen i JWE-headeren, slik at mottaker kan finne riktig nøkkel for dekryptering.
