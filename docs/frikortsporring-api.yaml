@@ -254,7 +254,7 @@ paths:
         Endepunkt som lar konsumenter verifisere at integrasjonen er korrekt satt opp,
         uten å gjøre oppslag på ekte borgere.
 
-        Endepunktet er ment å bruke for oppsett eller manuell kontroll og feilsøking, ikke automatiserte kall.
+        Endepunktet er ment å brukes til oppsett eller manuell kontroll og feilsøking, ikke automatiserte kall.
 
         Endepunktet validerer hele kjeden — autentisering, kryptering og avtaleforhold — og
         returnerer status for hver enkelt sjekk.
